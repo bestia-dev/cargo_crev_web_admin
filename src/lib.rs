@@ -83,41 +83,38 @@
 //!
 // endregion: auto_md_to_doc_comments include README.md A //!
 
+mod blocklisted_repos_mod;
+mod my_trusted_repos_mod;
 mod utils_mod;
 
 pub use utils_mod::*;
 
 // use unwrap::unwrap;
 
-/// list the explicit trusted reviewers from the /trust/*.crev files
-pub fn trusted() {
-    println!("List of explicit trusted reviewers from the /trust/*.crev files");
+use crate::{blocklisted_repos_mod::BlocklistedRepos, my_trusted_repos_mod::MyTrustedRepos};
+
+/// list the explicit trusted reviewers from cargo crev command
+pub fn trusted_from_crev_command() {
+    println!("List of explicit trusted reviewers from the cargo crev command");
     println!("Warning: It shows also implicitly myself as high trust.");
     println!("$ cargo crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1");
     println!("");
 
-    let output = std::process::Command::new("cargo")
-        .args([
-            "crev",
-            "id",
-            "query",
-            "trusted",
-            "--high-cost",
-            "1",
-            "--medium-cost",
-            "1",
-            "--low-cost",
-            "1",
-            "--depth",
-            "1",
-        ])
-        .output()
-        .unwrap();
-    let output = format!(
-        "{} {}",
-        String::from_utf8(output.stdout).unwrap(),
-        String::from_utf8(output.stderr).unwrap()
-    );
+    let my_trusted_repos = MyTrustedRepos::new();
+    let output = my_trusted_repos.list_from_crev_command();
+
+    let line_count = count_newlines(&output);
+    println!("{}\nLine count: {}", output, line_count);
+}
+
+/// list the explicit trusted reviewers from the /trust/*.crev files
+pub fn trusted_from_files() {
+    println!("List of explicit trusted reviewers from the /trust/*.crev files");
+    println!("");
+
+    let my_trusted_repos = MyTrustedRepos::new();
+    let output = my_trusted_repos.list_from_files();
+
     let line_count = count_newlines(&output);
     println!("{}\nLine count: {}", output, line_count);
 }
@@ -161,4 +158,50 @@ pub fn fetch() {
     );
     let line_count = count_newlines(&output);
     println!("{}\nLine count: {}", output, line_count);
+}
+
+/// add new trusted repo
+pub fn add_trust(repo_url: &str) {
+    println!("Add a trusted repo url.");
+    let my_trusted_repos = MyTrustedRepos::new();
+    let output = my_trusted_repos.add_trust(repo_url);
+
+    println!("{}", output);
+}
+
+/// delete from trusted repo
+pub fn delete_trust(repo_url: &str) {
+    println!("Delete from trusted repo.");
+    let my_trusted_repos = MyTrustedRepos::new();
+    my_trusted_repos.delete_trust(repo_url);
+}
+
+/// web app reads and reindex new or changed data
+pub fn reindex() {
+    println!("Web app reads and reindex new or changed data.");
+    // curl --silent https://bestia.dev/rust-reviews/reserved_folder/reindex_after_fetch_new_reviews/
+    let _output = std::process::Command::new("curl")
+        .arg("--silent")
+        .arg("https://bestia.dev/rust-reviews/reserved_folder/reindex_after_fetch_new_reviews/")
+        .output()
+        .unwrap();
+    println!("Reindex finished.");
+}
+
+/// add new blocklist repo
+pub fn add_blocklisted(repo_url: &str, note: &str) {
+    println!("Add blocklisted repo url.");
+    let mut bl = BlocklistedRepos::read();
+    bl.add(repo_url, note);
+    bl.write();
+    println!("Added to blocklist.");
+}
+
+/// delete from blocklist repo
+pub fn delete_blocklisted(repo_url: &str) {
+    println!("Delete from blocklisted repo.");
+    let mut bl = BlocklistedRepos::read();
+    bl.delete(repo_url);
+    bl.write();
+    println!("Deleted from blocklist.");
 }

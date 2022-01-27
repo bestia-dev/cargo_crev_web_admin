@@ -27,17 +27,22 @@ Some admin tasks are needed and I don't want them to be accessible on the web.
 This will be a CLI app that can be used when logged on the linux terminal over SSH.  
 So is sure that only an admin, who can log in on to the server, can use this tasks.
 
-1. delete from `trust` someone from blocklist json (case insensitive)
+1. delete proof from `trust`
 2. Delete from \\\Secure FTP\google_cloud\home\luciano_bestia\.cache\crev\remotes\
 folders of reviewers that are not in
 \\\Secure FTP\google_cloud\home\luciano_bestia\config\crev\proofs\github_com_cargo-crev-web_crev-proofs-..\...\trust\
-3. short command for cargo crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
-4. short command for cargo crev repo fetch trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
++3. short command for cargo crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
++4. short command for cargo crev repo fetch trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
 5. short command for web reindex
-6. short command for cargo crev trust --level low <https://github.com/Alxandr/crev-proofs>
-7. command to add to blocklist
-8. command to delete from blocklist
++6. short command for cargo crev trust --level low <https://github.com/Alxandr/crev-proofs>
++7. command to add to blocklist
++8. command to delete from blocklist
 9. Integrity - warnings if a review have incorrect url or ID
+10. delete from `trust` someone from blocklist json (case insensitive)
+
+Some tasks need the crev passphrase. Put it in the env variable:  
+`$  export CREV_PASSPHRASE=xxx`  
+Add a space before the command to avoid to be saved in the bash history.  
 
 ## Development
 

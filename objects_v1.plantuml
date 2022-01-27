@@ -1,0 +1,18 @@
+@startuml "carg_crev_web_admin objects"
+' carg_crev_web_admin/objects_v1.txt
+' https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/LucianoBestia/cargo_crev_web_admin/main/objects_v1.plantuml
+
+class CrevFile {
+  read(file_path)
+  iter_proof_range()
+  iter_my_trust_crev_file()
+  get_proof_from_range()
+  delete_url()
+}
+
+'note right of CrevFile::iter_proof_range
+  'iterator
+'end note
+
+
+@enduml

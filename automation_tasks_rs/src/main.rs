@@ -33,6 +33,8 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
                     task_release();
                 } else if &task == "doc" {
                     task_docs();
+                } else if &task == "test" {
+                    task_test();
                 } else if &task == "commit_and_push" {
                     let arg_2 = args.next();
                     task_commit_and_push(arg_2);
@@ -53,6 +55,7 @@ User defined automation tasks for `cargo_crev_web_admin`:
 cargo auto build - builds the crate in debug mode, fmt
 cargo auto release - builds the crate in release mode, version from date, fmt, strip
 cargo auto doc - builds the docs, copy to docs directory
+cargo auto test - runs all the tests
 cargo auto commit_and_push "message" - commits with message and push with mandatory message
       (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.)
 "#);
@@ -65,7 +68,7 @@ fn completion() {
     let last_word = args[3].as_str();
 
     if last_word == "cargo-auto" || last_word == "auto" {
-        let sub_commands = vec!["build", "release", "doc", "commit_and_push"];
+        let sub_commands = vec!["build", "release", "doc","test", "commit_and_push"];
         completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
     /*
@@ -125,6 +128,18 @@ fn task_docs() {
     println!(
         r#"
 After `cargo auto doc`, check `docs/index.html`. If ok, then 
+`cargo auto test`
+"#
+    );
+}
+
+/// cargo test
+fn task_test() {
+    run_shell_command("cargo test");
+   
+    println!(
+        r#"
+After `cargo auto test`, if ok, then 
 `cargo auto commit_and_push "message"`
 "#
     );
