@@ -179,14 +179,13 @@ fn task_publish_to_web() {
 
     // cargo publish
     // 1. sync files from the Rust project to a local copy of the web folder
-    let project_file_to_publish = format!(r#"~/rustprojects/{package_name}/target/release"#, package_name = cargo_toml.package_name());
-    let local_copy_of_web_folder = format!(r#"~/rustprojects/googlecloud/home/luciano_bestia/.cargo/bin"#);
-    let file_to_copy = cargo_toml.package_name();
-    run_shell_command(&format!(r#"rsync -a --info=progress2 --delete-after --include={} {} {}"#,file_to_copy, project_file_to_publish, local_copy_of_web_folder));
+    let project_folder_to_publish = format!(r#"~/rustprojects/{package_name}/target/release/{package_name}"#, package_name = cargo_toml.package_name());
+    let local_copy_of_web_folder = format!(r#"~/rustprojects/googlecloud/home/luciano_bestia/.cargo/bin/{package_name}"#,package_name = cargo_toml.package_name());
+    run_shell_command(&format!(r#"rsync -a --info=progress2 --delete-after {} {}"#,project_folder_to_publish, local_copy_of_web_folder));
     // 2. sync files from the local copy to remote server. 
     let ssh_user_and_server = "luciano_bestia@bestia.dev";
-    let web_folder_over_ssh = format!(r#"{ssh_user_and_server}:/home/luciano_bestia/.cargo/bin/"#,ssh_user_and_server =ssh_user_and_server);
-    run_shell_command(&format!(r#"rsync -e ssh -a --info=progress2 --delete-after --include={} {} {}"#,file_to_copy, local_copy_of_web_folder, web_folder_over_ssh));
+    let web_folder_over_ssh = format!(r#"{ssh_user_and_server}:/home/luciano_bestia/.cargo/bin/{package_name}"#,ssh_user_and_server =ssh_user_and_server, package_name = cargo_toml.package_name());
+    run_shell_command(&format!(r#"rsync -e ssh -a --info=progress2 --delete-after {} {}"#,local_copy_of_web_folder, web_folder_over_ssh));
     
     println!(
         r#"
