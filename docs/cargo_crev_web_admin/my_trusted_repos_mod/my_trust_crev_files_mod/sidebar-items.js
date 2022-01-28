@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["IterMyTrustCrevFile","iterator over my trust crev files"],["MyTrustCrevFiles",""],["TRUST_FOLDER",""]]});

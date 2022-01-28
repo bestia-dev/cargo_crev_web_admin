@@ -21,7 +21,7 @@ impl MyTrustedRepos {
             my_trust_crev_files: my_trust_crev_files_mod::MyTrustCrevFiles::new(),
         }
     }
-    // delete trusted repo
+    // delete trusted repo (case insensitive)
     pub fn trusted_delete(&self, repo_url: &str) {
         for mut crev_file in self.my_trust_crev_files.iter_my_trust_crev_file() {
             crev_file.delete_url(repo_url).unwrap();

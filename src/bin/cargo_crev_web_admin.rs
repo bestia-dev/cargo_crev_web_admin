@@ -8,7 +8,7 @@ fn main() {
 
     match env::args().nth(1).as_deref() {
         None | Some("--help") | Some("-h") => print_help(),
-        Some("completion") => completion(),       
+        Some("completion") => completion(),
         Some("trusted_list") => {
             let ns_started = ns_start("trusted_list");
             trusted_list();
@@ -34,7 +34,7 @@ fn main() {
             let ns_started = ns_start("trusted_from_crev_command");
             trusted_from_crev_command();
             ns_print_ms("trusted_from_crev_command", ns_started);
-        }      
+        }
         Some("blocklisted_list") => {
             let ns_started = ns_start("blocklisted_list");
             blocklisted_list();
@@ -58,6 +58,11 @@ fn main() {
                 _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
             }
             ns_print_ms("blocklisted_delete", ns_started);
+        }
+        Some("remotes_delete") => {
+            let ns_started = ns_start("remotes_delete");
+            remotes_delete();
+            ns_print_ms("remotes_delete", ns_started);
         }
         Some("fetch") => {
             let ns_started = ns_start("fetch");
@@ -129,6 +134,7 @@ fn completion() {
             "blocklisted_list",
             "blocklisted_add",
             "blocklisted_delete",
+            "remotes_delete",
             "fetch",
             "reindex",
         ];
@@ -163,15 +169,16 @@ blocklisted_list          - list blocklisted
 blocklisted_add "url", "note" - add repo_url to blocklisted
 blocklisted_delete "url"  - delete repo_url from blocklisted
 
+remotes_delete            - delete fetched repos from /remote/ if they are not in trusted_list
 fetch                     - fetch the repos of explicit trusted reviewers 
 reindex                   - web app reads and reindex new or changed data 
 
 
-Put the autocompletion command in ~/.bash_profile or ~/.profile:
-complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
-
-Put the crev passphrase in env variable (add a space before to avoid storing in bash history):
+Type the crev passphrase into env variable (add one space before the command to avoid storing in bash history):
 $ export CREV_PASSPHRASE=xxx
+
+Save the autocompletion command in ~/.bashrc:
+complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
 
 open-source: {g}https://github.com/LucianoBestia/cargo_crev_web_admin{rs}
     "#,

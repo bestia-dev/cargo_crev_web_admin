@@ -68,7 +68,7 @@ impl CrevFile {
             let trust_yaml = proof.into_trust_yaml();
             for id in trust_yaml.ids.iter() {
                 if let Some(url) = &id.url {
-                    if url.as_str() == repo_url {
+                    if url.as_str().to_lowercase() == repo_url.to_lowercase() {
                         ranges_to_delete.push(proof_range.clone());
                         break;
                     }

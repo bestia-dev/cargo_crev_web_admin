@@ -4,13 +4,13 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.126.1230  date: 2022-01-26 authors: Luciano Bestia***  
+//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.956  date: 2022-01-28 authors: Luciano Bestia***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-157-green.svg)]()
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-18-blue.svg)]()
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-18-purple.svg)]()
-//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)]()
-//! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)]()
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-789-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-126-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //!
 //! [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/blob/main/LICENSE) [![Rust](https://github.com/LucianoBestia/cargo_crev_web_admin/workflows/RustAction/badge.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //!
@@ -21,17 +21,9 @@
 //! This will be a CLI app that can be used when logged on the linux terminal over SSH.  
 //! So is sure that only an admin, who can log in on to the server, can use this tasks.
 //!
-//! 1. delete from `trust` someone from blocklist json (case insensitive)
-//! 2. Delete from \\\Secure FTP\google_cloud\home\luciano_bestia\.cache\crev\remotes\
-//! folders of reviewers that are not in
-//! \\\Secure FTP\google_cloud\home\luciano_bestia\config\crev\proofs\github_com_cargo-crev-web_crev-proofs-..\...\trust\
-//! 3. short command for cargo crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
-//! 4. short command for cargo crev repo fetch trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
-//! 5. short command for web reindex
-//! 6. short command for cargo crev trust --level low <https://github.com/Alxandr/crev-proofs>
-//! 7. command to add to blocklist
-//! 8. command to delete from blocklist
-//! 9. Integrity - warnings if a review have incorrect url or ID
+//! Some tasks need the crev passphrase. Put it in the env variable before starting the CLI:  
+//! `$  export CREV_PASSPHRASE=xxx`  
+//! Add a space before the command to avoid to be saved in the bash history.  
 //!
 //! ## Development
 //!
@@ -51,6 +43,7 @@
 //!
 //! This executable is prepared for auto-completion in bash.  
 //! Run this command to define auto-completion in bash for the current session:  
+//! Or add it to `.bashrc` file to be executed n every session start.
 //!
 //! ```bash
 //! complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
@@ -60,7 +53,7 @@
 //!
 //! ## TODO
 //!
-//! all
+//! Integrity - warnings if a review have incorrect url or ID
 //!
 //! ## cargo crev reviews and advisory
 //!
@@ -76,10 +69,10 @@
 //! My open-source projects are free as a beer (MIT license).  
 //! I just love programming.  
 //! But I need also to drink. If you find my projects and tutorials helpful,  
-//! please buy me a beer or two donating on my [paypal](https://www.paypal.com/paypalme/LucianoBestia).  
+//! please buy me a beer donating on my [paypal](https://www.paypal.com/paypalme/LucianoBestia).  
 //! You know the price of a beer in your local bar ;-)  
 //! So I can drink a free beer for your health :-)  
-//! [Na zdravje](https://translate.google.com/?hl=en&sl=sl&tl=en&text=Na%20zdravje&op=translate) !
+//! [Na zdravje!](https://translate.google.com/?hl=en&sl=sl&tl=en&text=Na%20zdravje&op=translate) [Alla salute!](https://dictionary.cambridge.org/dictionary/italian-english/alla-salute) [Prost!](https://dictionary.cambridge.org/dictionary/german-english/prost) [Nazdravlje!](https://matadornetwork.com/nights/how-to-say-cheers-in-50-languages/) 🍻
 //!
 // endregion: auto_md_to_doc_comments include README.md A //!
 
@@ -90,8 +83,14 @@ mod utils_mod;
 pub use utils_mod::*;
 
 // use unwrap::unwrap;
-
 use crate::{blocklisted_repos_mod::BlocklistedRepos, my_trusted_repos_mod::MyTrustedRepos};
+use lazy_static::lazy_static;
+
+lazy_static! {
+    // The Linux home folder ~ or /home/username
+    pub static ref HOME_DIR:std::path::PathBuf = home::home_dir().unwrap();
+    pub static ref CREV_REMOTES_DIR: std::path::PathBuf = HOME_DIR.join(".cache/crev/remotes");
+}
 
 /// list the explicit trusted reviewers from cargo crev command
 pub fn trusted_from_crev_command() {
@@ -121,6 +120,42 @@ pub fn trusted_list() {
 
 fn count_newlines(s: &str) -> usize {
     s.as_bytes().iter().filter(|&&c| c == b'\n').count()
+}
+
+/// delete fetched repos from /remote/ if they are not in trusted_list
+pub fn remotes_delete() {
+    println!("Delete fetched repos from /remote/ if they are not in trusted_list.");
+    let mut output = String::new();
+    let my_trusted_repos = MyTrustedRepos::new();
+    let trusted_list = my_trusted_repos.list_from_files();
+
+    for entry in CREV_REMOTES_DIR.read_dir().unwrap() {
+        let entry = entry.unwrap();
+        let entry_name = entry.file_name();
+        let entry_name = entry_name.to_string_lossy();
+        let mut is_found = false;
+        for trusted_url in trusted_list.lines() {
+            let trusted_name = trusted_url
+                .trim_start_matches("https://")
+                .trim_start_matches("http://")
+                .replace("/", "_")
+                .replace(".", "_");
+            if entry_name
+                .to_lowercase()
+                .starts_with(&trusted_name.to_lowercase())
+            {
+                is_found = true;
+            }
+        }
+        if is_found == false {
+            output.push_str(&format!("rm -rf {:#?}\n", &entry.path()));
+        }
+    }
+    if !output.is_empty() {
+        println!("Run these commands manually in bash:\n{}", output);
+    }
+
+    println!("remotes_delete finished.");
 }
 
 /// fetch the explicit trusted reviewers from the /trust/*.crev files
@@ -194,8 +229,8 @@ pub fn blocklisted_list() {
     println!("");
 
     let bl = BlocklistedRepos::default();
-    let mut output=String::new();
-    for x in bl.list().iter(){
+    let mut output = String::new();
+    for x in bl.list().iter() {
         output.push_str(&x.0);
         output.push_str("      ");
         output.push_str(&x.1);

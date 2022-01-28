@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["cargo_crev_web_admin"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.57.0/core/default/trait.Default.html\" title=\"trait core::default::Default\">Default</a> for <a class=\"struct\" href=\"cargo_crev_web_admin/blocklisted_repos_mod/struct.BlocklistedRepos.html\" title=\"struct cargo_crev_web_admin::blocklisted_repos_mod::BlocklistedRepos\">BlocklistedRepos</a>","synthetic":false,"types":["cargo_crev_web_admin::blocklisted_repos_mod::BlocklistedRepos"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

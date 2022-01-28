@@ -5,14 +5,14 @@
 [comment]: # (auto_cargo_toml_to_md start)
 
 **Admin CLI for cargo_crev_web**  
-***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.749  date: 2022-01-28 authors: Luciano Bestia***  
+***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.956  date: 2022-01-28 authors: Luciano Bestia***  
 
 [comment]: # (auto_cargo_toml_to_md end)
 
 [comment]: # (auto_lines_of_code start)
-[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-704-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
-[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-124-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
-[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-92-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-789-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-126-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 
@@ -27,20 +27,7 @@ Some admin tasks are needed and I don't want them to be accessible on the web.
 This will be a CLI app that can be used when logged on the linux terminal over SSH.  
 So is sure that only an admin, who can log in on to the server, can use this tasks.
 
-1. delete proof from `trust`
-2. Delete from \\\Secure FTP\google_cloud\home\luciano_bestia\.cache\crev\remotes\
-folders of reviewers that are not in
-\\\Secure FTP\google_cloud\home\luciano_bestia\config\crev\proofs\github_com_cargo-crev-web_crev-proofs-..\...\trust\
-+3. short command for cargo crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
-+4. short command for cargo crev repo fetch trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
-5. short command for web reindex
-+6. short command for cargo crev trust --level low <https://github.com/Alxandr/crev-proofs>
-+7. command to add to blocklist
-+8. command to delete from blocklist
-9. Integrity - warnings if a review have incorrect url or ID
-10. delete from `trust` someone from blocklist json (case insensitive)
-
-Some tasks need the crev passphrase. Put it in the env variable:  
+Some tasks need the crev passphrase. Put it in the env variable before starting the CLI:  
 `$  export CREV_PASSPHRASE=xxx`  
 Add a space before the command to avoid to be saved in the bash history.  
 
@@ -62,6 +49,7 @@ cargo auto
 
 This executable is prepared for auto-completion in bash.  
 Run this command to define auto-completion in bash for the current session:  
+Or add it to `.bashrc` file to be executed n every session start.
 
 ```bash
 complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
@@ -71,7 +59,7 @@ To make it permanent add this command to the file `~/.bashrc` or some other file
 
 ## TODO
 
-all
+Integrity - warnings if a review have incorrect url or ID
 
 ## cargo crev reviews and advisory
 

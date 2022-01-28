@@ -58,7 +58,7 @@ impl BlocklistedRepos {
         ));
     }
 
-    pub fn list(&self)->Vec<(String,String)>{
+    pub fn list(&self) -> Vec<(String, String)> {
         self.list.clone()
     }
 
@@ -70,9 +70,10 @@ impl BlocklistedRepos {
         self.list
             .sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
     }
-    /// delete repo_url
+    /// delete repo_url (case insensitive)
     pub fn delete(&mut self, repo_url: &str) {
-        self.list.retain(|x| x.0 != repo_url);
+        self.list
+            .retain(|x| x.0.to_lowercase() != repo_url.to_lowercase());
     }
     /// count
     #[allow(dead_code)]
