@@ -4,10 +4,10 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1105  date: 2022-01-28 authors: Luciano Bestia***  
+//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1153  date: 2022-01-28 authors: Luciano Bestia***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-791-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-809-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-120-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
@@ -223,6 +223,19 @@ pub fn reindex() {
         .output()
         .unwrap();
     println!("Reindex finished.");
+}
+
+/// after changing trust files it is mandatory to publish this repo
+pub fn publish_to_github() {
+    println!("After changing trust files it is mandatory to publish this repo.");
+    println!("Because crev uses the fetched files from remotes only, not the local copy, even for my repo.");
+    println!("Try:");
+    println!("$ cargo crev publish");
+    println!("If you don't have permission to write to github, then we need to run ssh-agent and ssh-add.");
+    println!("$ eval `ssh-agent`");
+    println!("$ ssh-add ~/.ssh/bestia2_for_github");
+    println!("And finally:");
+    println!("$ cargo crev publish");
 }
 
 /// list of blocklisted

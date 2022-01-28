@@ -74,6 +74,11 @@ fn main() {
             reindex();
             ns_print_ms("reindex", ns_started);
         }
+        Some("publish_to_github") => {
+            let ns_started = ns_start("publish_to_github");
+            publish_to_github();
+            ns_print_ms("publish_to_github", ns_started);
+        }
         /*
         Some("list_and_sync") => match env::args().nth(2).as_deref() {
             Some(path) => {
@@ -137,6 +142,7 @@ fn completion() {
             "remotes_delete",
             "fetch",
             "reindex",
+            "publish_to_github",
         ];
         completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
@@ -172,7 +178,7 @@ blocklisted_delete "url"  - delete repo_url from blocklisted
 remotes_delete            - delete fetched repos from /remote/ if they are not in trusted_list
 fetch                     - fetch the repos of explicit trusted reviewers 
 reindex                   - web app reads and reindex new or changed data 
-
+publish_to_github         - after changing trust files it is mandatory to publish this repo
 
 Type the crev passphrase into env variable (add one space before the command to avoid storing in bash history):
 $ export CREV_PASSPHRASE=xxx
