@@ -272,15 +272,25 @@
 <span id="272">272</span>
 <span id="273">273</span>
 <span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
 </pre><pre class="rust"><code><span class="comment">// cargo_crev_web_admin lib.rs</span>
 
 <span class="comment">// region: auto_md_to_doc_comments include README.md A //!</span>
 <span class="doccomment">//! # cargo_crev_web_admin</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! **Admin CLI for cargo_crev_web**  </span>
-<span class="doccomment">//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1153  date: 2022-01-28 authors: Luciano Bestia***  </span>
+<span class="doccomment">//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1226  date: 2022-01-28 authors: Luciano Bestia***  </span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-809-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)</span>
+<span class="doccomment">//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-819-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)</span>
 <span class="doccomment">//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-120-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)</span>
 <span class="doccomment">//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)</span>
 <span class="doccomment">//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)</span>
@@ -503,13 +513,23 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">publish_to_github</span>() {
     <span class="macro">println!</span>(<span class="string">&quot;After changing trust files it is mandatory to publish this repo.&quot;</span>);
     <span class="macro">println!</span>(<span class="string">&quot;Because crev uses the fetched files from remotes only, not the local copy, even for my repo.&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;Try:&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;$ cargo crev publish&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;If you don&#39;t have permission to write to github, then we need to run ssh-agent and ssh-add.&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;$ eval `ssh-agent`&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;$ ssh-add ~/.ssh/bestia2_for_github&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;And finally:&quot;</span>);
-    <span class="macro">println!</span>(<span class="string">&quot;$ cargo crev publish&quot;</span>);
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">std::process::Command::new</span>(<span class="string">&quot;cargo&quot;</span>)
+        .<span class="ident">arg</span>(<span class="string">&quot;crev&quot;</span>)
+        .<span class="ident">arg</span>(<span class="string">&quot;publish&quot;</span>)
+        .<span class="ident">output</span>()
+        .<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">format!</span>(
+        <span class="string">&quot;{} {}&quot;</span>,
+        <span class="ident">String::from_utf8</span>(<span class="ident">output</span>.<span class="ident">stdout</span>).<span class="ident">unwrap</span>(),
+        <span class="ident">String::from_utf8</span>(<span class="ident">output</span>.<span class="ident">stderr</span>).<span class="ident">unwrap</span>()
+    );
+    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">output</span>);
+    <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">contains</span>(<span class="string">&quot;git@github.com: Permission denied (publickey).&quot;</span>) {
+        <span class="macro">println!</span>(<span class="string">&quot;If you don&#39;t have permission to write to github, then we need to run ssh-agent and ssh-add:&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;$ eval `ssh-agent`; ssh-add ~/.ssh/bestia2_for_github&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;Enter your ssh passphrase for github and finally repeat:&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;$ cargo_crev_web_admin publish&quot;</span>);
+    }
 }
 
 <span class="doccomment">/// list of blocklisted</span>

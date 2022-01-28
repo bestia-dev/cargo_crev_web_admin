@@ -1,6 +1,6 @@
 [package]
 name = "cargo_crev_web_admin"
-version = "2022.128.1153"
+version = "2022.128.1226"
 description = "Admin CLI for cargo_crev_web"
 authors = ["Luciano Bestia"]
 edition = "2021"

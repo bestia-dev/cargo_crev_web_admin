@@ -4,9 +4,9 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1153  date: 2022-01-28 authors: Luciano Bestia***  
+//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1226  date: 2022-01-28 authors: Luciano Bestia***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-809-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-819-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-120-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
@@ -229,13 +229,23 @@ pub fn reindex() {
 pub fn publish_to_github() {
     println!("After changing trust files it is mandatory to publish this repo.");
     println!("Because crev uses the fetched files from remotes only, not the local copy, even for my repo.");
-    println!("Try:");
-    println!("$ cargo crev publish");
-    println!("If you don't have permission to write to github, then we need to run ssh-agent and ssh-add.");
-    println!("$ eval `ssh-agent`");
-    println!("$ ssh-add ~/.ssh/bestia2_for_github");
-    println!("And finally:");
-    println!("$ cargo crev publish");
+    let output = std::process::Command::new("cargo")
+        .arg("crev")
+        .arg("publish")
+        .output()
+        .unwrap();
+    let output = format!(
+        "{} {}",
+        String::from_utf8(output.stdout).unwrap(),
+        String::from_utf8(output.stderr).unwrap()
+    );
+    println!("{}", &output);
+    if output.contains("git@github.com: Permission denied (publickey).") {
+        println!("If you don't have permission to write to github, then we need to run ssh-agent and ssh-add:");
+        println!("$ eval `ssh-agent`; ssh-add ~/.ssh/bestia2_for_github");
+        println!("Enter your ssh passphrase for github and finally repeat:");
+        println!("$ cargo_crev_web_admin publish");
+    }
 }
 
 /// list of blocklisted
