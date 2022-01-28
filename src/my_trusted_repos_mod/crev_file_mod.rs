@@ -43,6 +43,22 @@ impl CrevFile {
         super::crev_proof_mod::CrevProof::from_str(proof_str)
     }
 
+    pub fn list_of_urls(&self) -> Vec<String> {
+        let mut ret_vec = vec![];
+        for proof_range in self.iter_proof_range() {
+            let proof = self.get_proof_from_range(&proof_range);
+            let trust_yaml = proof.into_trust_yaml();
+            for id in trust_yaml.ids.iter() {
+                if let Some(url) = &id.url {
+                    ret_vec.push(url.clone());
+                }
+            }
+        }
+        ret_vec.sort();
+        ret_vec.dedup();
+        ret_vec
+    }
+
     /// remove trust proofs with this url
     /// and saves file
     pub fn delete_url(&mut self, repo_url: &str) -> anyhow::Result<()> {

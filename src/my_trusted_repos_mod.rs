@@ -1,3 +1,5 @@
+use std::vec;
+
 // my_trusted_repos_mod.rs
 
 // public object/interface to work with `my trusted repos`
@@ -20,15 +22,15 @@ impl MyTrustedRepos {
         }
     }
     // delete trusted repo
-    pub fn delete_trust(&self, repo_url: &str) {
+    pub fn trusted_delete(&self, repo_url: &str) {
         for mut crev_file in self.my_trust_crev_files.iter_my_trust_crev_file() {
             crev_file.delete_url(repo_url).unwrap();
         }
     }
     // add trusted repo
-    pub fn add_trust(&self, repo_url: &str) -> String {
+    pub fn trusted_add(&self, repo_url: &str) -> String {
         // if it already exists, delete the old one, because `cargo crev trust` only adds new even for same repo_url
-        self.delete_trust(repo_url);
+        self.trusted_delete(repo_url);
         let output = std::process::Command::new("cargo")
             .args(["crev", "trust", "--level", "low"])
             .arg(repo_url)
@@ -43,8 +45,13 @@ impl MyTrustedRepos {
         output
     }
     pub fn list_from_files(&self) -> String {
-        let output = String::new();
-
+        let mut ret_vec: Vec<String> = vec![];
+        for crev_file in self.my_trust_crev_files.iter_my_trust_crev_file() {
+            ret_vec.append(&mut crev_file.list_of_urls());
+        }
+        ret_vec.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+        ret_vec.dedup();
+        let output = ret_vec.join("\n");
         //return
         output
     }

@@ -79,3 +79,11 @@ pub fn ns_print_ns(name: &str, ns_start: i64) -> i64 {
     // return new now_ns
     Utc::now().timestamp_nanos()
 }
+
+// datetime string to append to a file_name
+pub fn datetime_now_for_file_names() -> String {
+    let now = chrono::offset::Utc::now();
+    let datetime_string = now.format("%Y-%m-%dT%TZ").to_string();
+    // return
+    datetime_string
+}

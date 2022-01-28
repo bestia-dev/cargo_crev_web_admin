@@ -108,7 +108,7 @@ pub fn trusted_from_crev_command() {
 }
 
 /// list the explicit trusted reviewers from the /trust/*.crev files
-pub fn trusted_from_files() {
+pub fn trusted_list() {
     println!("List of explicit trusted reviewers from the /trust/*.crev files");
     println!("");
 
@@ -161,19 +161,19 @@ pub fn fetch() {
 }
 
 /// add new trusted repo
-pub fn add_trust(repo_url: &str) {
+pub fn trusted_add(repo_url: &str) {
     println!("Add a trusted repo url.");
     let my_trusted_repos = MyTrustedRepos::new();
-    let output = my_trusted_repos.add_trust(repo_url);
+    let output = my_trusted_repos.trusted_add(repo_url);
 
     println!("{}", output);
 }
 
 /// delete from trusted repo
-pub fn delete_trust(repo_url: &str) {
+pub fn trusted_delete(repo_url: &str) {
     println!("Delete from trusted repo.");
     let my_trusted_repos = MyTrustedRepos::new();
-    my_trusted_repos.delete_trust(repo_url);
+    my_trusted_repos.trusted_delete(repo_url);
 }
 
 /// web app reads and reindex new or changed data
@@ -188,19 +188,36 @@ pub fn reindex() {
     println!("Reindex finished.");
 }
 
+/// list of blocklisted
+pub fn blocklisted_list() {
+    println!("List of blocklisted");
+    println!("");
+
+    let bl = BlocklistedRepos::default();
+    let mut output=String::new();
+    for x in bl.list().iter(){
+        output.push_str(&x.0);
+        output.push_str("      ");
+        output.push_str(&x.1);
+        output.push('\n');
+    }
+    let line_count = count_newlines(&output);
+    println!("{}\nLine count: {}", output, line_count);
+}
+
 /// add new blocklist repo
-pub fn add_blocklisted(repo_url: &str, note: &str) {
+pub fn blocklisted_add(repo_url: &str, note: &str) {
     println!("Add blocklisted repo url.");
-    let mut bl = BlocklistedRepos::read();
+    let mut bl = BlocklistedRepos::default();
     bl.add(repo_url, note);
     bl.write();
     println!("Added to blocklist.");
 }
 
 /// delete from blocklist repo
-pub fn delete_blocklisted(repo_url: &str) {
+pub fn blocklisted_delete(repo_url: &str) {
     println!("Delete from blocklisted repo.");
-    let mut bl = BlocklistedRepos::read();
+    let mut bl = BlocklistedRepos::default();
     bl.delete(repo_url);
     bl.write();
     println!("Deleted from blocklist.");

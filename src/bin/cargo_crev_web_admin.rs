@@ -8,61 +8,66 @@ fn main() {
 
     match env::args().nth(1).as_deref() {
         None | Some("--help") | Some("-h") => print_help(),
-        Some("completion") => completion(),
+        Some("completion") => completion(),       
+        Some("trusted_list") => {
+            let ns_started = ns_start("trusted_list");
+            trusted_list();
+            ns_print_ms("trusted_list", ns_started);
+        }
+        Some("trusted_add") => match env::args().nth(2).as_deref() {
+            Some(url) => {
+                let ns_started = ns_start("trusted_add");
+                trusted_add(url);
+                ns_print_ms("trusted_add", ns_started);
+            }
+            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+        },
+        Some("trusted_delete") => match env::args().nth(2).as_deref() {
+            Some(url) => {
+                let ns_started = ns_start("trusted_delete");
+                trusted_delete(url);
+                ns_print_ms("trusted_delete", ns_started);
+            }
+            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+        },
         Some("trusted_from_crev_command") => {
             let ns_started = ns_start("trusted_from_crev_command");
             trusted_from_crev_command();
             ns_print_ms("trusted_from_crev_command", ns_started);
+        }      
+        Some("blocklisted_list") => {
+            let ns_started = ns_start("blocklisted_list");
+            blocklisted_list();
+            ns_print_ms("blocklisted_list", ns_started);
         }
-        Some("trusted_from_files") => {
-            let ns_started = ns_start("trusted_from_files");
-            trusted_from_files();
-            ns_print_ms("trusted_from_files", ns_started);
+        Some("blocklisted_add") => {
+            let ns_started = ns_start("blocklisted_add");
+            match env::args().nth(2).as_deref() {
+                Some(repo_url) => match env::args().nth(3).as_deref() {
+                    Some(note) => blocklisted_add(repo_url, note),
+                    _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+                },
+                _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+            }
+            ns_print_ms("blocklisted_add", ns_started);
+        }
+        Some("blocklisted_delete") => {
+            let ns_started = ns_start("blocklisted_delete");
+            match env::args().nth(2).as_deref() {
+                Some(repo_url) => blocklisted_delete(repo_url),
+                _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+            }
+            ns_print_ms("blocklisted_delete", ns_started);
         }
         Some("fetch") => {
             let ns_started = ns_start("fetch");
             fetch();
             ns_print_ms("fetch", ns_started);
         }
-        Some("add_trust") => match env::args().nth(2).as_deref() {
-            Some(url) => {
-                let ns_started = ns_start("add_trust");
-                add_trust(url);
-                ns_print_ms("add_trust", ns_started);
-            }
-            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
-        },
-        Some("delete_trust") => match env::args().nth(2).as_deref() {
-            Some(url) => {
-                let ns_started = ns_start("delete_trust");
-                delete_trust(url);
-                ns_print_ms("delete_trust", ns_started);
-            }
-            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
-        },
         Some("reindex") => {
             let ns_started = ns_start("reindex");
             reindex();
             ns_print_ms("reindex", ns_started);
-        }
-        Some("add_blocklisted") => {
-            let ns_started = ns_start("add_blocklisted");
-            match env::args().nth(2).as_deref() {
-                Some(repo_url) => match env::args().nth(3).as_deref() {
-                    Some(note) => add_blocklisted(repo_url, note),
-                    _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
-                },
-                _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
-            }
-            ns_print_ms("add_blocklisted", ns_started);
-        }
-        Some("delete_blocklisted") => {
-            let ns_started = ns_start("delete_blocklisted");
-            match env::args().nth(2).as_deref() {
-                Some(repo_url) => delete_blocklisted(repo_url),
-                _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
-            }
-            ns_print_ms("delete_blocklisted", ns_started);
         }
         /*
         Some("list_and_sync") => match env::args().nth(2).as_deref() {
@@ -117,14 +122,15 @@ fn completion() {
         let sub_commands = vec![
             "--help",
             "-h",
+            "trusted_list",
+            "trusted_add",
+            "trusted_delete",
             "trusted_from_crev_command",
-            "trusted_from_files",
+            "blocklisted_list",
+            "blocklisted_add",
+            "blocklisted_delete",
             "fetch",
-            "add_trust",
-            "delete_trust",
             "reindex",
-            "add_blocklisted",
-            "delete_blocklisted",
         ];
         completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
@@ -145,15 +151,27 @@ fn print_help() {
     println!(
         r#"
 {y}Welcome to cargo_crev_web_admin{rs}
-Admin tasks for the cargo_crev_web server:
-cargo_crev_web_admin trusted_from_crev_command - list the explicit trusted reviewers from cargo crev command
-cargo_crev_web_admin trusted_from_files - list the explicit trusted reviewers from the /trust/*.crev files
-cargo_crev_web_admin fetch - fetch the repos of explicit trusted reviewers 
-cargo_crev_web_admin add_trust "url" - add a trusted repo url
-cargo_crev_web_admin delete_trust "url" - delete a trusted repo url
-cargo_crev_web_admin reindex - web app reads and reindex new or changed data 
-cargo_crev_web_admin add_blocklisted "url", "note" - add repo_url to blocklisted
-cargo_crev_web_admin delete_blocklisted "url" - delete repo_url from blocklisted
+Admin tasks for the cargo_crev_web server.
+
+Command line arguments:
+trusted_list              - list the explicit trusted reviewers from the /trust/*.crev files
+trusted_add "url"         - add a trusted repo url (needs CREV_PASSPHRASE)
+trusted_delete "url"      - delete a trusted repo url
+trusted_from_crev_command - list the explicit trusted reviewers from cargo crev command
+
+blocklisted_list          - list blocklisted
+blocklisted_add "url", "note" - add repo_url to blocklisted
+blocklisted_delete "url"  - delete repo_url from blocklisted
+
+fetch                     - fetch the repos of explicit trusted reviewers 
+reindex                   - web app reads and reindex new or changed data 
+
+
+Put the autocompletion command in ~/.bash_profile or ~/.profile:
+complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
+
+Put the crev passphrase in env variable (add a space before to avoid storing in bash history):
+$ export CREV_PASSPHRASE=xxx
 
 open-source: {g}https://github.com/LucianoBestia/cargo_crev_web_admin{rs}
     "#,
