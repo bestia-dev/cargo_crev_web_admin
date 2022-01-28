@@ -4,10 +4,10 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.956  date: 2022-01-28 authors: Luciano Bestia***  
+//! ***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1105  date: 2022-01-28 authors: Luciano Bestia***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-789-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-126-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-791-green.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/LucianoBestia/cargo_crev_web_admin/)
@@ -138,8 +138,10 @@ pub fn remotes_delete() {
             let trusted_name = trusted_url
                 .trim_start_matches("https://")
                 .trim_start_matches("http://")
+                .trim_end_matches(".git")
                 .replace("/", "_")
-                .replace(".", "_");
+                .replace(".", "_")
+                .replace("~", "_");
             if entry_name
                 .to_lowercase()
                 .starts_with(&trusted_name.to_lowercase())

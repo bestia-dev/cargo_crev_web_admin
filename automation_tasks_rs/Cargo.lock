@@ -39,9 +39,9 @@ checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
 name = "cargo_auto_lib"
-version = "0.7.19"
+version = "0.7.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7fdc475cd0f937835cfb9781d8a957511c9ddc485d2ff9a1c7f742f821db86d"
+checksum = "ba680d84f32d0dc2be953b5f7b3f2e6a3fd61fbe7d220b3ad18a6e7bd5d27daa"
 dependencies = [
  "anyhow",
  "cargo_toml",
@@ -49,7 +49,9 @@ dependencies = [
  "filetime",
  "glob",
  "lazy_static",
+ "reader_for_microxml",
  "regex",
+ "semver",
  "serde",
  "serde_derive",
  "serde_json",
@@ -174,6 +176,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "reader_for_microxml"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d726a3f4c11def37106edaf44caf861a9012ebcd4eb6f748cc4fd93c2a15de1"
+
+[[package]]
 name = "redox_syscall"
 version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -213,6 +221,12 @@ name = "ryu"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
+
+[[package]]
+name = "semver"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "568a8e6258aa33c13358f81fd834adb854c6f7c9468520910a9b1e8fac068012"
 
 [[package]]
 name = "serde"

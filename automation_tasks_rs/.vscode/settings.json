@@ -4,10 +4,12 @@
         "crev",
         "deps",
         "endregion",
+        "googlecloud",
         "mkdir",
         "octocrab",
         "repos",
         "reqwest",
-        "rustfmt"
+        "rustfmt",
+        "rustprojects"
     ]
 }
