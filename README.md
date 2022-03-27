@@ -5,7 +5,7 @@
 [comment]: # (auto_cargo_toml_to_md start)
 
 **Admin CLI for cargo_crev_web**  
-***[repository](https://github.com/lucianobestia/cargo_crev_web_admin/); version: 2022.128.1226  date: 2022-01-28 authors: Luciano Bestia***  
+***version: 2022.128.1226  date: 2022-01-28 author: [dev_Bestia](https://bestia.dev) repository: [GitHub](https://github.com/LucianoBestia/cargo_crev_web_admin)***  
 
 [comment]: # (auto_cargo_toml_to_md end)
 
