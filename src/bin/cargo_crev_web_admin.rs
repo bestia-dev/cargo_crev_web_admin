@@ -186,7 +186,7 @@ $ export CREV_PASSPHRASE=xxx
 Save the autocompletion command in ~/.bashrc:
 complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
 
-open-source: {g}https://github.com/LucianoBestia/cargo_crev_web_admin{rs}
+open-source: {g}https://github.com/bestia-dev/cargo_crev_web_admin{rs}
     "#,
         g = *GREEN,
         y = *YELLOW,

@@ -8,7 +8,7 @@
 // from:
 //   id-type: crev
 //   id: 24YKeuThJDNFSlJyxcl5diSZcKcRbh-0zXM0YxTOFJw
-//   url: "https://github.com/LucianoBestia/crev-proofs"
+//   url: "https://github.com/bestia-dev/crev-proofs"
 // ids:
 //   - id-type: crev
 //     id: GH_y9BmI567xqh3_5vSStNAAZ79mcxazK52avCzttps

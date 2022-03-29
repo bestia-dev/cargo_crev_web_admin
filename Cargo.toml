@@ -2,11 +2,11 @@
 name = "cargo_crev_web_admin"
 version = "2022.128.1226"
 description = "Admin CLI for cargo_crev_web"
-authors = ["Luciano Bestia"]
+authors = ["bestia.dev"]
 edition = "2021"
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/lucianobestia/cargo_crev_web_admin/"
+repository = "https://github.com/bestia-dev/cargo_crev_web_admin/"
 categories = ["programming"]
 keywords = ["crev"]
 publish = false
