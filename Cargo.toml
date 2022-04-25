@@ -3,6 +3,7 @@ name = "cargo_crev_web_admin"
 version = "2022.128.1226"
 description = "Admin CLI for cargo_crev_web"
 authors = ["bestia.dev"]
+homepage = "https://bestia.dev"
 edition = "2021"
 license = "MIT"
 readme = "README.md"
