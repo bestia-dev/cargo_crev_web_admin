@@ -300,10 +300,10 @@
 <span class="doccomment">//! # cargo_crev_web_admin</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! **Admin CLI for cargo_crev_web**  </span>
-<span class="doccomment">//! ***version: 2022.623.1234 date: 2022-06-23 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  </span>
+<span class="doccomment">//! ***version: 2022.623.1512 date: 2022-06-23 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  </span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-814-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)</span>
-<span class="doccomment">//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-114-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)</span>
+<span class="doccomment">//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)</span>
 <span class="doccomment">//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-97-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)</span>
 <span class="doccomment">//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)</span>
 <span class="doccomment">//! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)</span>
@@ -474,7 +474,7 @@
     );
     <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
 
-    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">std::process::Command::new</span>(<span class="string">&quot;cargo&quot;</span>)
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">std::process::Command::new</span>(<span class="string">&quot;cargo-crev&quot;</span>)
         .<span class="ident">args</span>([
             <span class="string">&quot;crev&quot;</span>,
             <span class="string">&quot;repo&quot;</span>,
@@ -532,7 +532,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">publish_to_github</span>() {
     <span class="macro">println!</span>(<span class="string">&quot;After changing trust files it is mandatory to publish this repo.&quot;</span>);
     <span class="macro">println!</span>(<span class="string">&quot;Because crev uses the fetched files from remotes only, not the local copy, even for my repo.&quot;</span>);
-    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">std::process::Command::new</span>(<span class="string">&quot;cargo&quot;</span>)
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">std::process::Command::new</span>(<span class="string">&quot;cargo-crev&quot;</span>)
         .<span class="ident">arg</span>(<span class="string">&quot;crev&quot;</span>)
         .<span class="ident">arg</span>(<span class="string">&quot;publish&quot;</span>)
         .<span class="ident">output</span>()
