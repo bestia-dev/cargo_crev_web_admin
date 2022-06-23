@@ -178,7 +178,7 @@ pub fn fetch() {
     );
     println!("");
 
-    let output = std::process::Command::new("cargo")
+    let output = std::process::Command::new("cargo-crev")
         .args([
             "crev",
             "repo",
@@ -236,7 +236,7 @@ pub fn reindex() {
 pub fn publish_to_github() {
     println!("After changing trust files it is mandatory to publish this repo.");
     println!("Because crev uses the fetched files from remotes only, not the local copy, even for my repo.");
-    let output = std::process::Command::new("cargo")
+    let output = std::process::Command::new("cargo-crev")
         .arg("crev")
         .arg("publish")
         .output()

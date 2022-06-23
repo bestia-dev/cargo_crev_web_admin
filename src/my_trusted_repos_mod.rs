@@ -31,7 +31,7 @@ impl MyTrustedRepos {
     pub fn trusted_add(&self, repo_url: &str) -> String {
         // if it already exists, delete the old one, because `cargo-crev crev trust` only adds new even for same repo_url
         self.trusted_delete(repo_url);
-        let output = std::process::Command::new("cargo")
+        let output = std::process::Command::new("cargo-crev")
             .args(["crev", "trust", "--level", "low"])
             .arg(repo_url)
             .output()
@@ -56,7 +56,7 @@ impl MyTrustedRepos {
         output
     }
     pub fn list_from_crev_command(&self) -> String {
-        let output = std::process::Command::new("cargo")
+        let output = std::process::Command::new("cargo-crev")
             .args([
                 "crev",
                 "id",
