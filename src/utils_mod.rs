@@ -2,36 +2,25 @@
 //! A module with often used functions.
 
 use chrono::prelude::*;
-use lazy_static::lazy_static;
 use unwrap::unwrap;
 
-lazy_static! {
-    /// ansi color
-    pub static ref GREEN: String = termion::color::Fg(termion::color::Green).to_string();
-    /// ansi color
-    pub static ref YELLOW: String = termion::color::Fg(termion::color::Yellow).to_string();
-    /// ansi color
-    pub static ref RED: String = termion::color::Fg(termion::color::Red).to_string();
-    /// ansi reset color
-    pub static ref RESET: String = termion::color::Fg(termion::color::Reset).to_string();
-    /// ansi clear line
-    pub static ref CLEAR_LINE: String = termion::clear::CurrentLine.to_string();
-    /// ansi clear all
-    pub static ref CLEAR_ALL: String = termion::clear::All.to_string();
-
-}
+// ANSI colors for Linux terminal
+// https://github.com/shiena/ansicolor/blob/master/README.md
+#[allow(dead_code)]
+pub const RED: &str = "\x1b[31m";
+#[allow(dead_code)]
+pub const YELLOW: &str = "\x1b[33m";
+#[allow(dead_code)]
+pub const GREEN: &str = "\x1b[32m";
+#[allow(dead_code)]
+pub const RESET: &str = "\x1b[0m";
 
 /// returns the now in nanoseconds
 pub fn ns_start(text: &str) -> i64 {
     let now = Utc::now();
     if !text.is_empty() {
-        println!(
-            "{}{}: {}{}",
-            *GREEN,
-            &Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
-            text,
-            *RESET
-        );
+        let time_now = &Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+        println!("{GREEN}{time_now}: {text}{RESET}");
     }
     now.timestamp_nanos()
 }
@@ -53,10 +42,7 @@ pub fn ns_print_ms(name: &str, ns_start: i64) -> i64 {
         let mut string_duration_ns = String::new();
         unwrap!(string_duration_ns.write_formatted(&duration_ns, &Locale::en));
 
-        println!(
-            "{}{:>15} ms: {}{}",
-            *GREEN, string_duration_ns, name, *RESET
-        );
+        println!("{GREEN}{string_duration_ns:>15} ms: {name}{RESET}");
     }
     // return new now_ns
     Utc::now().timestamp_nanos()
@@ -71,10 +57,7 @@ pub fn ns_print_ns(name: &str, ns_start: i64) -> i64 {
         let mut string_duration_ns = String::new();
         unwrap!(string_duration_ns.write_formatted(&duration_ns, &Locale::en));
 
-        println!(
-            "{}{:>15} ns: {}{}",
-            *GREEN, string_duration_ns, name, *RESET
-        );
+        println!("{GREEN}{string_duration_ns:>15} ns: {name}{RESET}");
     }
     // return new now_ns
     Utc::now().timestamp_nanos()

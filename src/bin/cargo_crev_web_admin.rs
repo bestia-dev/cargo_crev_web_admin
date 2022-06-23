@@ -3,6 +3,17 @@
 use cargo_crev_web_admin::*;
 use std::env;
 
+// ANSI colors for Linux terminal
+// https://github.com/shiena/ansicolor/blob/master/README.md
+#[allow(dead_code)]
+pub const RED: &str = "\x1b[31m";
+#[allow(dead_code)]
+pub const YELLOW: &str = "\x1b[33m";
+#[allow(dead_code)]
+pub const GREEN: &str = "\x1b[32m";
+#[allow(dead_code)]
+pub const RESET: &str = "\x1b[0m";
+
 fn main() {
     pretty_env_logger::init();
 
@@ -162,14 +173,14 @@ fn completion() {
 fn print_help() {
     println!(
         r#"
-{y}Welcome to cargo_crev_web_admin{rs}
-Admin tasks for the cargo_crev_web server.
+    {YELLOW}Welcome to cargo_crev_web_admin{RESET}
+    Admin tasks for the cargo_crev_web server.
 
-Command line arguments:
+    Command line arguments:
 trusted_list              - list the explicit trusted reviewers from the /trust/*.crev files
 trusted_add "url"         - add a trusted repo url (needs CREV_PASSPHRASE)
 trusted_delete "url"      - delete a trusted repo url
-trusted_from_crev_command - list the explicit trusted reviewers from cargo crev command
+trusted_from_crev_command - list the explicit trusted reviewers from cargo-crev command
 
 blocklisted_list          - list blocklisted
 blocklisted_add "url", "note" - add repo_url to blocklisted
@@ -180,16 +191,13 @@ fetch                     - fetch the repos of explicit trusted reviewers
 reindex                   - web app reads and reindex new or changed data 
 publish_to_github         - after changing trust files it is mandatory to publish this repo
 
-Type the crev passphrase into env variable (add one space before the command to avoid storing in bash history):
-$ export CREV_PASSPHRASE=xxx
+    Type the crev passphrase into env variable (add one space before the command to avoid storing in bash history):
+ export CREV_PASSPHRASE=xxx
 
-Save the autocompletion command in ~/.bashrc:
+    Save the autocompletion command in ~/.bashrc:
 complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
 
-open-source: {g}https://github.com/bestia-dev/cargo_crev_web_admin{rs}
-    "#,
-        g = *GREEN,
-        y = *YELLOW,
-        rs = *RESET,
+    © bestia.dev 2022, MIT License, github.com/bestia-dev/cargo_crev_web_admin
+"#
     );
 }

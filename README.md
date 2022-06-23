@@ -5,14 +5,14 @@
 [comment]: # (auto_cargo_toml_to_md start)
 
 **Admin CLI for cargo_crev_web**  
-***version: 2022.128.1226  date: 2022-01-28 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/cargo_crev_web_admin)***  
+***version: 2022.623.1234 date: 2022-06-23 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 
 [comment]: # (auto_cargo_toml_to_md end)
 
 [comment]: # (auto_lines_of_code start)
-[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-819-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-120-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-814-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-114-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-97-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 
@@ -66,7 +66,7 @@ To make it permanent add this command to the file `~/.bashrc` or some other file
 
 Integrity - warnings if a review have incorrect url or ID
 
-## cargo crev reviews and advisory
+## cargo-crev reviews and advisory
 
 Please, spread this info !\
 Open source code needs a community effort to express trustworthiness.\

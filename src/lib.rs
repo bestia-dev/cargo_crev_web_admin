@@ -4,15 +4,20 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***[repository](https://github.com/bestia-dev/cargo_crev_web_admin/); version: 2022.128.1226  date: 2022-01-28 authors: bestia.dev***  
+//! ***version: 2022.623.1234 date: 2022-06-23 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-819-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-120-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-93-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-814-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-114-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-97-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //!
-//! [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/blob/main/LICENSE) [![Rust](https://github.com/bestia-dev/cargo_crev_web_admin/workflows/RustAction/badge.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/blob/main/LICENSE)
+//! [![Rust](https://github.com/bestia-dev/cargo_crev_web_admin/workflows/RustAction/badge.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fbestia-dev%2Fcargo_crev_web_admin&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+//!
+//! Hashtags: #rustlang #buildtool #developmenttool #web #admin #cli  
+//! My projects on Github are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).
 //!
 //! ## cargo_crev_web_admin CLI
 //!
@@ -55,7 +60,7 @@
 //!
 //! Integrity - warnings if a review have incorrect url or ID
 //!
-//! ## cargo crev reviews and advisory
+//! ## cargo-crev reviews and advisory
 //!
 //! Please, spread this info !\
 //! Open source code needs a community effort to express trustworthiness.\
@@ -92,11 +97,13 @@ lazy_static! {
     pub static ref CREV_REMOTES_DIR: std::path::PathBuf = HOME_DIR.join(".cache/crev/remotes");
 }
 
-/// list the explicit trusted reviewers from cargo crev command
+/// list the explicit trusted reviewers from cargo-crev command
 pub fn trusted_from_crev_command() {
-    println!("List of explicit trusted reviewers from the cargo crev command");
+    println!("List of explicit trusted reviewers from the cargo-crev command");
     println!("Warning: It shows also implicitly myself as high trust.");
-    println!("$ cargo crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1");
+    println!(
+        "$ cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1"
+    );
     println!("");
 
     let my_trusted_repos = MyTrustedRepos::new();
@@ -167,7 +174,7 @@ pub fn fetch() {
         "Warning: It will try to fetch also `myself`, but the local folder is deleted on purpose."
     );
     println!(
-        "$ cargo crev repo fetch trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1"
+        "$ cargo-crev crev repo fetch trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1"
     );
     println!("");
 

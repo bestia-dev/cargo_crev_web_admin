@@ -29,7 +29,7 @@ impl MyTrustedRepos {
     }
     // add trusted repo
     pub fn trusted_add(&self, repo_url: &str) -> String {
-        // if it already exists, delete the old one, because `cargo crev trust` only adds new even for same repo_url
+        // if it already exists, delete the old one, because `cargo-crev crev trust` only adds new even for same repo_url
         self.trusted_delete(repo_url);
         let output = std::process::Command::new("cargo")
             .args(["crev", "trust", "--level", "low"])

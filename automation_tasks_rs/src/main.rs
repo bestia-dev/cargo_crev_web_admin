@@ -1,9 +1,19 @@
 //! automation_tasks_rs for cargo_crev_web_admin
 
 use cargo_auto_lib::*;
-// use unwrap::unwrap;
 
-/// automation_tasks_rs for cargo_crev_web_admin
+// ANSI colors for Linux terminal
+// https://github.com/shiena/ansicolor/blob/master/README.md
+#[allow(dead_code)]
+pub const RED: &str = "\x1b[31m";
+#[allow(dead_code)]
+pub const YELLOW: &str = "\x1b[33m";
+#[allow(dead_code)]
+pub const GREEN: &str = "\x1b[32m";
+#[allow(dead_code)]
+pub const RESET: &str = "\x1b[0m";
+
+
 fn main() {
     exit_if_not_run_in_rust_project_root_directory();
 
@@ -14,7 +24,7 @@ fn main() {
     match_arguments_and_call_tasks(args);
 }
 
-// region: match, help and completion. Take care to keep them in sync with the changes.
+// region: match, help and completion
 
 /// match arguments and call tasks functions
 fn match_arguments_and_call_tasks(mut args: std::env::Args) {
@@ -26,13 +36,13 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
             if &task == "completion" {
                 completion();
             } else {
-                println!("Running automation task: {}", &task);
-                if &task == "build"{
+                println!("{YELLOW}Running automation task: {task}{RESET}");
+                if &task == "build" {
                     task_build();
                 } else if &task == "release" {
                     task_release();
                 } else if &task == "doc" {
-                    task_docs();
+                    task_doc();
                 } else if &task == "test" {
                     task_test();
                 } else if &task == "commit_and_push" {
@@ -41,7 +51,7 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
                 } else if &task == "publish_to_web" {
                     task_publish_to_web();
                 } else {
-                    println!("Task {} is unknown.", &task);
+                    println!("{RED}Error: Task {task} is unknown.{RESET}");
                     print_help();
                 }
             }
@@ -53,15 +63,30 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
 fn print_help() {
     println!(
         r#"
-User defined automation tasks for `cargo_crev_web_admin`:
-cargo auto build - builds the crate in debug mode, fmt
-cargo auto release - builds the crate in release mode, version from date, fmt, strip
+    {YELLOW}Welcome to cargo-auto !
+    This program automates your custom tasks when developing a Rust project.{RESET}
+
+    User defined tasks in automation_tasks_rs:
+cargo auto build - builds the crate in debug mode, fmt, increment version
+cargo auto release - builds the crate in release mode, fmt, increment version
 cargo auto doc - builds the docs, copy to docs directory
 cargo auto test - runs all the tests
 cargo auto commit_and_push "message" - commits with message and push with mandatory message
-      (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.)
+    (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.)
 cargo auto publish_to_web - publish the release to web.crev.dev, git tag
-      "#);
+
+    © bestia.dev 2022, MIT License, github.com/bestia-dev/cargo-auto
+"#);
+    print_examples_cmd();
+}
+
+/// all example commands in one place
+fn print_examples_cmd(){
+/*
+    println!(r#"run examples:
+cargo run --example example1
+"#);
+*/
 }
 
 /// sub-command for bash auto-completion of `cargo auto` using the crate `dev_bestia_cargo_completion`
@@ -71,7 +96,7 @@ fn completion() {
     let last_word = args[3].as_str();
 
     if last_word == "cargo-auto" || last_word == "auto" {
-        let sub_commands = vec!["build", "release", "doc","test", "commit_and_push", "publish_to_web"];
+        let sub_commands = vec!["build", "release", "doc", "test", "commit_and_push", "publish_to_web"];
         completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
     /*
@@ -83,24 +108,32 @@ fn completion() {
     */
 }
 
-// endregion: match, help and completion.
+// endregion: match, help and completion
 
 // region: tasks
 
+/// cargo build
 fn task_build() {
-    auto_version_from_date();
+    let cargo_toml = CargoToml::read();
+    auto_version_increment_semver_or_date();
     run_shell_command("cargo fmt");
     run_shell_command("cargo build");
     println!(
-        r#"After `cargo auto build`, run it
-`target/debug/cargo_crev_web_admin -h`. If ok, then 
-`cargo auto release`
-"#);
+        r#"{YELLOW}
+    After `cargo auto build`, run the compiled binary, examples and/or tests
+./target/debug/{package_name} 
+    if ok, then,
+cargo auto release
+{RESET}"#,
+package_name = cargo_toml.package_name(),
+    );
+    print_examples_cmd();
 }
 
+/// cargo build --release
 fn task_release() {
     let cargo_toml = CargoToml::read();
-    auto_version_from_date();
+    auto_version_increment_semver_or_date();
     auto_cargo_toml_to_md();
     auto_lines_of_code("");
 
@@ -110,58 +143,68 @@ fn task_release() {
         "strip target/release/{package_name}",
         package_name = cargo_toml.package_name()
     ));    
-    println!(r#"After `cargo auto release`, run it
-`target/release/cargo_crev_web_admin -h`. If ok, then 
-`cargo auto doc`"#);
+    println!(
+        r#"{YELLOW}
+    After `cargo auto release`, run the compiled binary, examples and/or tests
+./target/release/{package_name} 
+    if ok, then,
+cargo auto doc
+{RESET}"#,
+package_name = cargo_toml.package_name(),
+    );
+    print_examples_cmd();
 }
 
-fn task_docs() {
+/// cargo doc, then copies to /docs/ folder, because this is a github standard folder
+fn task_doc() {
     let cargo_toml = CargoToml::read();
     auto_cargo_toml_to_md();
     auto_lines_of_code("");
+    auto_plantuml(&cargo_toml.package_repository().unwrap());
     auto_md_to_doc_comments();
-    #[rustfmt::skip]
-    let shell_commands = [
-        "cargo doc --no-deps --document-private-items",
-        // copy target/doc into docs/ because it is github standard
-        "rsync -a --info=progress2 --delete-after target/doc/ docs/",
-        "echo Create simple index.html file in docs directory",
-        &format!("echo \"<meta http-equiv=\\\"refresh\\\" content=\\\"0; url={}/index.html\\\" />\" > docs/index.html",cargo_toml.package_name().replace("-","_")) ,
-    ];
-    run_shell_commands(shell_commands.to_vec());
+
+    run_shell_command("cargo doc --no-deps --document-private-items");
+    // copy target/doc into docs/ because it is github standard
+    run_shell_command("rsync -a --info=progress2 --delete-after target/doc/ docs/");
+    // Create simple index.html file in docs directory
+    run_shell_command(&format!(
+        "echo \"<meta http-equiv=\\\"refresh\\\" content=\\\"0; url={}/index.html\\\" />\" > docs/index.html",
+        cargo_toml.package_name().replace("-","_")
+    ));
+    run_shell_command("cargo fmt");
     // message to help user with next move
     println!(
-        r#"
-After `cargo auto doc`, check `docs/index.html`. If ok, then 
-`cargo auto test`
-"#
+        r#"{YELLOW}
+    After `cargo auto doc`, check `docs/index.html`. If ok, then test the documentation code examples
+cargo auto test
+{RESET}"#
     );
 }
 
 /// cargo test
 fn task_test() {
     run_shell_command("cargo test");
-   
     println!(
-        r#"
-After `cargo auto test`, if ok, then 
-`cargo auto commit_and_push "message"`
-"#
+        r#"{YELLOW}
+    After `cargo auto test`. If ok, then 
+cargo auto commit_and_push "message"
+    with mandatory commit message
+{RESET}"#
     );
 }
 
 /// commit and push
 fn task_commit_and_push(arg_2: Option<String>) {
     match arg_2 {
-        None => println!("Error: message for commit is mandatory"),
+        None => println!("{RED}Error: Message for commit is mandatory.{RESET}"),
         Some(message) => {
-            run_shell_command(&format!(r#"git add -A && git commit -m "{}""#, message));
+            run_shell_command(&format!(r#"git add -A && git commit --allow-empty -m "{}""#, message));
             run_shell_command("git push");
             println!(
-                r#"
-After `cargo auto commit_and_push "message"`
-run `cargo auto publish_to_web`
-"#
+                r#"{YELLOW}
+    After `cargo auto commit_and_push "message"`
+cargo auto publish_to_crates_io
+{RESET}"#
             );
         }
     }
@@ -169,6 +212,7 @@ run `cargo auto publish_to_web`
 
 /// publish to web (the release build) and git tag
 fn task_publish_to_web() {
+    println!(r#"{YELLOW}For SSH connection you need to run ssh-agent and then ssh-add you private key and passphrase.{RESET}"#);
     let cargo_toml = CargoToml::read();
     // git tag
     let shell_command = format!(
@@ -178,20 +222,18 @@ fn task_publish_to_web() {
     run_shell_command(&shell_command);
 
     // cargo publish
-    // 1. sync files from the Rust project to a local copy of the web folder
+    // sync files from the local copy to remote server. 
     let project_folder_to_publish = format!(r#"~/rustprojects/{package_name}/target/release/{package_name}"#, package_name = cargo_toml.package_name());
-    let local_copy_of_web_folder = format!(r#"~/rustprojects/googlecloud/home/luciano_bestia/.cargo/bin/{package_name}"#,package_name = cargo_toml.package_name());
-    run_shell_command(&format!(r#"rsync -a --info=progress2 --delete-after {} {}"#,project_folder_to_publish, local_copy_of_web_folder));
-    // 2. sync files from the local copy to remote server. 
     let ssh_user_and_server = "luciano_bestia@bestia.dev";
     let web_folder_over_ssh = format!(r#"{ssh_user_and_server}:/home/luciano_bestia/.cargo/bin/{package_name}"#,ssh_user_and_server =ssh_user_and_server, package_name = cargo_toml.package_name());
-    run_shell_command(&format!(r#"rsync -e ssh -a --info=progress2 --delete-after {} {}"#,local_copy_of_web_folder, web_folder_over_ssh));
+    run_shell_command(&format!(r#"rsync -e ssh -a --info=progress2 --delete-after {} {}"#,project_folder_to_publish, web_folder_over_ssh));
     
     println!(
         r#"
-After `cargo auto publish_to_web', ssh to server 
-`ssh -i ~/.ssh/luciano_mac luciano_bestia@bestia.dev -v` and run
-`cargo_crev_web_admin`
+    After `cargo auto publish_to_web', ssh to server 
+ssh -i ~/.ssh/luciano_mac luciano_bestia@bestia.dev -
+    and run
+cargo_crev_web_admin
 "#
     );
 }
