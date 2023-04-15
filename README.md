@@ -62,6 +62,42 @@ complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
 
 To make it permanent add this command to the file `~/.bashrc` or some other file that runs commands on bash initialization.  
 
+## install cargo-crev and copy data from server
+
+In the development environment inside a container I need the `cargo-crev` binary to run the commands. Fortunately there is a binary release already compiled here:
+<https://github.com/crev-dev/cargo-crev/releases/download/v0.23.3/cargo-crev-v0.23.3-x86_64-unknown-linux-musl.tar.gz>
+I unzip it and save the binary file cargo-crev in:`cp cargo-crev ~/.cargo/bin`, make it runnable `chmod +x ~/.cargo/bin/cargo-crev`
+I like the editor nano more then vim: `git config --global core.editor "nano"`, this will work also for cargo-crev.
+
+Now I need to import the `CrevId` from the server: copy the text from `wfx://FTP/google_vm_bestia_dev/home/luciano_bestia/.config/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml` then on the development machine execute this command `cargo-crev crev id import`, paste the text and press ctrl+D to finish the import.
+Check the import with `cargo-crev crev id current`.  
+
+I need the ssh keys from the server to connect to the github remote repository. Download from `wfx://FTP/google_vm_bestia_dev/home/luciano_bestia/.ssh/` the files `web_crev_dev_for_github` and `web_crev_dev_for_github.pub`. Copy inside the container and then copy to .ssh folder :  
+`cp web_crev_dev_for_github ~/.ssh/`, `cp web_crev_dev_for_github.pub ~/.ssh/`, make it private `chmod 400 ~/.ssh/web_crev_dev_for_github`
+Be careful to not commit any secrets or private keys to github!  
+Add the ssh key to the ssh-agent: `ssh-add ~/.ssh/web_crev_dev_for_github`
+I need to configure the remote repository: `cargo crev id set-url https://github.com/web-crev-dev/crev-proofs`
+To test add a `dpc` as trusted: `cargo-crev crev trust https://github.com/dpc/crev-proofs`
+
+Now check the dir with `cargo-crev crev repo dir`.  
+I got: `~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w`
+It looks crev changed the dir from ~/.config/crev to ~/.local/share/crev in some version. Be careful!
+
+Inside the `sample_data` folder I copy the files from from the server `web.crev.dev`.  
+`blocklisted_repos.json` is copied from `wfx://FTP/google_vm_bestia_dev/var/www/webapps/cargo_crev_web/blocklisted_repos.json`
+
+Folder content of `trust` is copied from `wfx://FTP/google_vm_bestia_dev/home/luciano_bestia/.config/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust`
+Now I need to copy the server trust files to the right folder for the development container:
+
+```bash
+mkdir -p ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
+cp ~/rustprojects/cargo_crev_web_admin/sample_data/trust/*.* ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
+ls ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
+cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
+```
+
+This should list around 80 directly trusted proof-repos that are used on the server.  
+
 ## TODO
 
 Integrity - warnings if a review have incorrect url or ID
