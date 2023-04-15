@@ -90,9 +90,12 @@ Folder content of `trust` is copied from `wfx://FTP/google_vm_bestia_dev/home/lu
 Now I need to copy the server trust files to the right folder for the development container:
 
 ```bash
-mkdir -p ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
+cp ~/rustprojects/cargo_crev_web_admin/sample_data/blocklisted_repos.json ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
+ls ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU
+
 cp ~/rustprojects/cargo_crev_web_admin/sample_data/trust/*.* ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
 ls ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
+
 cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
 ```
 
