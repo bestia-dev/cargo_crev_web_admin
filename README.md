@@ -68,50 +68,51 @@ In the development environment inside a container I need the `cargo-crev` binary
 
 ```bash
 curl -L -s https://github.com/crev-dev/cargo-crev/releases/download/v0.23.3/cargo-crev-v0.23.3-x86_64-unknown-linux-musl.tar.gz --output /tmp/cargo-crev.tar.gz
-tar --no-same-owner -xzv --strip-components=1 -C ~/.cargo/bin/temp -f /tmp/cargo-crev.tar.gz
+tar -xzv --no-same-owner --strip-components=1 -C ~/.cargo/bin -f /tmp/cargo-crev.tar.gz cargo-crev-v0.23.3-x86_64-unknown-linux-musl/cargo-crev
 rm /tmp/cargo-crev.tar.gz
 chmod +x ~/.cargo/bin/cargo-crev
 git config --global core.editor "nano"
-
 ```
 
-<>
+Now I need to import the `CrevId` from the server (ssh agent already has my ssh identity):  
 
-I like the editor nano more then vim: ``, this will work also for cargo-crev.
+```bash
+scp luciano_bestia@bestia.dev:/home/luciano_bestia/.config/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml .
+# Connecting standard input to the file
+cargo-crev crev id import <UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
+cargo-crev crev id current
+rm UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
+```
 
+I need the ssh keys from the server to connect to the github remote repository.  
 
+```bash
+scp luciano_bestia@bestia.dev:/home/luciano_bestia/.ssh/web_crev_dev_for_github.pub ~/.ssh/
+scp luciano_bestia@bestia.dev:/home/luciano_bestia/.ssh/web_crev_dev_for_github ~/.ssh/
+# Be careful to not commit any secrets or private keys to github! 
+chmod 400 ~/.ssh/web_crev_dev_for_github
+# Add the ssh key to your running ssh-agent
+ssh-add ~/.ssh/web_crev_dev_for_github
+# configure the remote repository 
+cargo crev id set-url https://github.com/web-crev-dev/crev-proofs
+# To test add a `dpc` as trusted
+cargo-crev crev trust https://github.com/dpc/crev-proofs
+# Now check the dir with 
+cargo-crev crev repo dir
+```
 
-## install cargo-crev and copy data from server
-
-
-
-Now I need to import the `CrevId` from the server: copy the text from `wfx://FTP/google_vm_bestia_dev/home/luciano_bestia/.config/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml` then on the development machine execute this command `cargo-crev crev id import`, paste the text and press ctrl+D to finish the import.
-Check the import with `cargo-crev crev id current`.  
-
-I need the ssh keys from the server to connect to the github remote repository. Download from `wfx://FTP/google_vm_bestia_dev/home/luciano_bestia/.ssh/` the files `web_crev_dev_for_github` and `web_crev_dev_for_github.pub`. Copy inside the container and then copy to .ssh folder :  
-`cp web_crev_dev_for_github ~/.ssh/`, `cp web_crev_dev_for_github.pub ~/.ssh/`, make it private `chmod 400 ~/.ssh/web_crev_dev_for_github`
-Be careful to not commit any secrets or private keys to github!  
-Add the ssh key to the ssh-agent: `ssh-add ~/.ssh/web_crev_dev_for_github`
-I need to configure the remote repository: `cargo crev id set-url https://github.com/web-crev-dev/crev-proofs`
-To test add a `dpc` as trusted: `cargo-crev crev trust https://github.com/dpc/crev-proofs`
-
-Now check the dir with `cargo-crev crev repo dir`.  
 I got: `~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w`
 It looks crev changed the dir from ~/.config/crev to ~/.local/share/crev in some version. Be careful!
 
-Inside the `sample_data` folder I copy the files from from the server `web.crev.dev`.  
-`blocklisted_repos.json` is copied from `wfx://FTP/google_vm_bestia_dev/var/www/webapps/cargo_crev_web/blocklisted_repos.json`
-
-Folder content of `trust` is copied from `wfx://FTP/google_vm_bestia_dev/home/luciano_bestia/.config/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust`
-Now I need to copy the server trust files to the right folder for the development container:
+Copy the crev data from the server for developing and debugging. The web.crev.dev has a special crev-id and should not interfere with other crev-ids on the system.  
 
 ```bash
-cp ~/rustprojects/cargo_crev_web_admin/sample_data/blocklisted_repos.json ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
-ls ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU
+scp luciano_bestia@bestia.dev:/var/www/webapps/cargo_crev_web/blocklisted_repos.json ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
+ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU
 
-cp ~/rustprojects/cargo_crev_web_admin/sample_data/trust/*.* ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
-ls ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
-
+scp -r luciano_bestia@bestia.dev:/home/luciano_bestia/.config/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/ ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
+ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
+# list only the directly trusted repos
 cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
 ```
 
