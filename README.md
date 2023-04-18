@@ -74,11 +74,11 @@ chmod +x ~/.cargo/bin/cargo-crev
 git config --global core.editor "nano"
 ```
 
-Now I need to import the `CrevId` from the server (ssh agent already has my ssh identity):  
+Now I need to import the `CrevId` from the server (ssh agent already has my ssh identity to connect to the server):  
 
 ```bash
-scp luciano_bestia@bestia.dev:/home/luciano_bestia/.config/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml .
-# Connecting standard input to the file
+scp luciano_bestia@bestia.dev:/home/luciano_bestia/.local/share/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml .
+# Connecting standard input to the file with <
 cargo-crev crev id import <UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
 cargo-crev crev id current
 rm UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
@@ -94,7 +94,7 @@ chmod 400 ~/.ssh/web_crev_dev_for_github
 # Add the ssh key to your running ssh-agent
 ssh-add ~/.ssh/web_crev_dev_for_github
 # configure the remote repository 
-cargo crev id set-url https://github.com/web-crev-dev/crev-proofs
+cargo-crev crev id set-url https://github.com/web-crev-dev/crev-proofs
 # To test add a `dpc` as trusted
 cargo-crev crev trust https://github.com/dpc/crev-proofs
 # Now check the dir with 
@@ -104,14 +104,22 @@ cargo-crev crev repo dir
 I got: `~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w`
 It looks crev changed the dir from ~/.config/crev to ~/.local/share/crev in some version. Be careful!
 
-Copy the crev data from the server for developing and debugging. The web.crev.dev has a special crev-id and should not interfere with other crev-ids on the system.  
+On every session I will need to add the ssh key to the running ssh-agent:
 
 ```bash
-scp luciano_bestia@bestia.dev:/var/www/webapps/cargo_crev_web/blocklisted_repos.json ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
+ssh-add ~/.ssh/web_crev_dev_for_github
+```
+
+Copy the new crev data from the server for developing and debugging. The web.crev.dev has a special crev-id and should not interfere with other crev-ids on the system.  
+
+```bash
+rm ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/blocklisted_repos.json
+scp luciano_bestia@bestia.dev:/var/www/webapps/cargo_crev_web/blocklisted_repos.json ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/blocklisted_repos.json
 ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU
 
-scp -r luciano_bestia@bestia.dev:/home/luciano_bestia/.config/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/ ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
-ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust
+rm -r ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
+scp -r luciano_bestia@bestia.dev:/home/luciano_bestia/.local/share/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/ ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
+ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
 # list only the directly trusted repos
 cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
 ```

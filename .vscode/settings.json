@@ -3,7 +3,7 @@
         "titleBar.activeForeground": "#fff",
         "titleBar.inactiveForeground": "#ffffffcc",
         "titleBar.activeBackground": "#8d3f3f",
-        "titleBar.inactiveBackground": "#3F758DCC"
+        "titleBar.inactiveBackground": "#8d3f3fCC"
       },
     "cSpell.words": [
         "Alla",
