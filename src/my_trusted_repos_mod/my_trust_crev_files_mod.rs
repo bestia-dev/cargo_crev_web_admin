@@ -1,17 +1,10 @@
 // my_trust_crev_files_mod.rs
 
 use lazy_static::lazy_static;
-// The debug build uses the files in `sample_data`
-#[cfg(debug_assertions)]
-lazy_static! {
-    pub static ref TRUST_FOLDER: std::path::PathBuf = std::path::PathBuf::from("sample_data/trust");
-}
 
-// The Release build uses the files on the cargo_crev_web server.
-// on my dev machine I copied this folder from the server.
-#[cfg(not(debug_assertions))]
 lazy_static! {
-    pub static ref TRUST_FOLDER: std::path::PathBuf = std::path::PathBuf::from("/home/luciano_bestia/.config/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust");
+    pub static ref TRUST_FOLDER: std::path::PathBuf =
+        crate::utils_mod::get_data_dir().join("trust");
 }
 
 pub struct MyTrustCrevFiles {

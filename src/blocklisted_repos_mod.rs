@@ -9,18 +9,9 @@ use lazy_static::lazy_static;
 use serde_derive::{Deserialize, Serialize};
 use unwrap::unwrap;
 
-// The debug build uses the files in `sample_data`
-#[cfg(debug_assertions)]
 lazy_static! {
     pub static ref BLOCKLISTED_REPOS_JSON: std::path::PathBuf =
-        std::path::PathBuf::from("sample_data/blocklisted_repos.json");
-}
-
-// The Release build uses the files on the cargo_crev_web server:
-#[cfg(not(debug_assertions))]
-lazy_static! {
-    pub static ref BLOCKLISTED_REPOS_JSON: std::path::PathBuf =
-        std::path::PathBuf::from("/var/www/webapps/cargo_crev_web/blocklisted_repos.json");
+        crate::utils_mod::get_data_dir().join("blocklisted_repos.json");
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -95,7 +86,7 @@ mod tests {
         // region: set initial content
         let file_path = std::path::Path::new("sample_data/blocklisted_repos.json");
         // copy the original file with the date/time
-        let suffix = crate::datetime_now_for_file_names();
+        let suffix = crate::datetime_now_for_dir_2_names();
         let file_path_copy = format!("sample_data/blocklisted_repos_{}.json_copy", suffix);
         let file_path_copy = std::path::Path::new(&file_path_copy);
         std::fs::copy(file_path, file_path_copy).unwrap();
