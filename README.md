@@ -5,14 +5,14 @@
 [//]: # (auto_cargo_toml_to_md start)
 
 **Admin CLI for cargo_crev_web**  
-***version: 2022.623.1512 date: 2022-06-23 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
+***version: 2023.605.1106 date: 2023-06-05 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 
 [//]: # (auto_cargo_toml_to_md end)
 
 [//]: # (auto_lines_of_code start)
-[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-814-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-850-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-97-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-103-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 
@@ -77,7 +77,7 @@ git config --global core.editor "nano"
 Now I need to import the `CrevId` from the server (ssh agent already has my ssh identity to connect to the server):  
 
 ```bash
-scp luciano_bestia@bestia.dev:/home/luciano_bestia/.local/share/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml .
+scp luciano_bestia@bestia.dev:/home/luciano_bestia/.config/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml .
 # Connecting standard input to the file with <
 cargo-crev crev id import <UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
 cargo-crev crev id current
@@ -118,7 +118,8 @@ scp luciano_bestia@bestia.dev:/var/www/webapps/cargo_crev_web/blocklisted_repos.
 ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU
 
 rm -r ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
-scp -r luciano_bestia@bestia.dev:/home/luciano_bestia/.local/share/crev/proofs/github_com_cargo-crev-web_crev-proofs-NfdERRQ6ONoBLjIp0YbFVw/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/ ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
+
+scp -r luciano_bestia@bestia.dev:/home/luciano_bestia/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/ ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
 ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
 # list only the directly trusted repos
 cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1

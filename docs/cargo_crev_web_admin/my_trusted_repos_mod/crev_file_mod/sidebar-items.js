@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["CrevFile",""],["IterProofRange","IterProofRange is between including “—– BEGIN CREV PROOF —–” and “—– END CREV PROOF —–”"]]});
+window.SIDEBAR_ITEMS = {"struct":["CrevFile","IterProofRange"]};

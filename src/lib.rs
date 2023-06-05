@@ -4,11 +4,11 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***version: 2022.623.1512 date: 2022-06-23 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
+//! ***version: 2023.605.1106 date: 2023-06-05 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-814-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-850-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-97-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-103-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //!
@@ -56,6 +56,71 @@
 //!
 //! To make it permanent add this command to the file `~/.bashrc` or some other file that runs commands on bash initialization.  
 //!
+//! ## Prepare development environment
+//!
+//! In the development environment inside a container I need the `cargo-crev` binary to run the commands. Fortunately there is a binary release already compiled:
+//!
+//! ```bash
+//! curl -L -s https://github.com/crev-dev/cargo-crev/releases/download/v0.23.3/cargo-crev-v0.23.3-x86_64-unknown-linux-musl.tar.gz --output /tmp/cargo-crev.tar.gz
+//! tar -xzv --no-same-owner --strip-components=1 -C ~/.cargo/bin -f /tmp/cargo-crev.tar.gz cargo-crev-v0.23.3-x86_64-unknown-linux-musl/cargo-crev
+//! rm /tmp/cargo-crev.tar.gz
+//! chmod +x ~/.cargo/bin/cargo-crev
+//! git config --global core.editor "nano"
+//! ```
+//!
+//! Now I need to import the `CrevId` from the server (ssh agent already has my ssh identity to connect to the server):  
+//!
+//! ```bash
+//! scp luciano_bestia@bestia.dev:/home/luciano_bestia/.config/crev/ids/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml .
+//! # Connecting standard input to the file with <
+//! cargo-crev crev id import <UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
+//! cargo-crev crev id current
+//! rm UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU.yaml
+//! ```
+//!
+//! I need the ssh keys from the server to connect to the github remote repository.  
+//!
+//! ```bash
+//! scp luciano_bestia@bestia.dev:/home/luciano_bestia/.ssh/web_crev_dev_for_github.pub ~/.ssh/
+//! scp luciano_bestia@bestia.dev:/home/luciano_bestia/.ssh/web_crev_dev_for_github ~/.ssh/
+//! # Be careful to not commit any secrets or private keys to github!
+//! chmod 400 ~/.ssh/web_crev_dev_for_github
+//! # Add the ssh key to your running ssh-agent
+//! ssh-add ~/.ssh/web_crev_dev_for_github
+//! # configure the remote repository
+//! cargo-crev crev id set-url https://github.com/web-crev-dev/crev-proofs
+//! # To test add a `dpc` as trusted
+//! cargo-crev crev trust https://github.com/dpc/crev-proofs
+//! # Now check the dir with
+//! cargo-crev crev repo dir
+//! ```
+//!
+//! I got: `~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w`
+//! It looks crev changed the dir from ~/.config/crev to ~/.local/share/crev in some version. Be careful!
+//!
+//! On every session I will need to add the ssh key to the running ssh-agent:
+//!
+//! ```bash
+//! ssh-add ~/.ssh/web_crev_dev_for_github
+//! ```
+//!
+//! Copy the new crev data from the server for developing and debugging. The web.crev.dev has a special crev-id and should not interfere with other crev-ids on the system.  
+//!
+//! ```bash
+//! rm ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/blocklisted_repos.json
+//! scp luciano_bestia@bestia.dev:/var/www/webapps/cargo_crev_web/blocklisted_repos.json ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/blocklisted_repos.json
+//! ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU
+//!
+//! rm -r ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
+//!
+//! scp -r luciano_bestia@bestia.dev:/home/luciano_bestia/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/ ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/
+//! ls -l ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/trust/
+//! # list only the directly trusted repos
+//! cargo-crev crev id query trusted --high-cost 1 --medium-cost 1 --low-cost 1 --depth 1
+//! ```
+//!
+//! This should list around 80 directly trusted proof-repos that are used on the server.  
+//!
 //! ## TODO
 //!
 //! Integrity - warnings if a review have incorrect url or ID
@@ -69,15 +134,19 @@
 //! Your personal reviews are most important. If you have a boss, he will sooner or later ask you to show him your reviews for all the dependencies you use. With [cargo_crev_reviews](https://crates.io/crates/cargo_crev_reviews) you have a basic tool to do that. \
 //! Write your reviews! Describe the crates you trust and why. Or warn about the crate versions you think are dangerous. Publish and share your opinion with other developers.\
 //!
-//! ## open-source and free as a beer
+//! ## Open-source and free as a beer
 //!
 //! My open-source projects are free as a beer (MIT license).  
 //! I just love programming.  
-//! But I need also to drink. If you find my projects and tutorials helpful,  
-//! please buy me a beer donating on my [paypal](https://paypal.me/LucianoBestia).  
+//! But I need also to drink. If you find my projects and tutorials helpful, please buy me a beer by donating to my [PayPal](https://paypal.me/LucianoBestia).  
 //! You know the price of a beer in your local bar ;-)  
 //! So I can drink a free beer for your health :-)  
 //! [Na zdravje!](https://translate.google.com/?hl=en&sl=sl&tl=en&text=Na%20zdravje&op=translate) [Alla salute!](https://dictionary.cambridge.org/dictionary/italian-english/alla-salute) [Prost!](https://dictionary.cambridge.org/dictionary/german-english/prost) [Nazdravlje!](https://matadornetwork.com/nights/how-to-say-cheers-in-50-languages/) 🍻
+//!
+//! [//bestia.dev](https://bestia.dev)  
+//! [//github.com/bestia-dev](https://github.com/bestia-dev)  
+//! [//bestiadev.substack.com](https://bestiadev.substack.com)  
+//! [//youtube.com/@bestia-dev-tutorials](https://youtube.com/@bestia-dev-tutorials)  
 //!
 // endregion: auto_md_to_doc_comments include README.md A //!
 

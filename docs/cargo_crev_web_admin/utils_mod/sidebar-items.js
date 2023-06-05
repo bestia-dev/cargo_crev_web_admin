@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["GREEN",""],["RED",""],["RESET",""],["YELLOW",""]],"fn":[["datetime_now_for_file_names",""],["ns_elapsed","returns the elapsed nanoseconds"],["ns_print_ms","print elapsed time in milliseconds and returns the new now in nanoseconds"],["ns_print_ns","print elapsed time in nanoseconds and returns the new now in nanoseconds"],["ns_start","returns the now in nanoseconds"]]});
+window.SIDEBAR_ITEMS = {"constant":["GREEN","RED","RESET","YELLOW"],"fn":["datetime_now_for_file_names","get_data_dir","ns_elapsed","ns_print_ms","ns_print_ns","ns_start"]};

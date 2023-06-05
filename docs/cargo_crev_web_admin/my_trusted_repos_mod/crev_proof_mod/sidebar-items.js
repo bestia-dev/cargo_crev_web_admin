@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["CrevProof",""]]});
+window.SIDEBAR_ITEMS = {"struct":["CrevProof"]};

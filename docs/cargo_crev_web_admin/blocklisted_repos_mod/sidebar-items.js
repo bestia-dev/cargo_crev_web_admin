@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BLOCKLISTED_REPOS_JSON",""],["BlocklistedRepos",""]]});
+window.SIDEBAR_ITEMS = {"constant":["FIELDS"],"enum":["__Field"],"fn":["__stability","__static_ref_initialize"],"static":["LAZY"],"struct":["BLOCKLISTED_REPOS_JSON","BlocklistedRepos","__FieldVisitor","__Visitor"]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["IterMyTrustCrevFile","iterator over my trust crev files"],["MyTrustCrevFiles",""],["TRUST_FOLDER",""]]});
+window.SIDEBAR_ITEMS = {"fn":["__stability","__static_ref_initialize"],"static":["LAZY"],"struct":["IterMyTrustCrevFile","MyTrustCrevFiles","TRUST_FOLDER"]};

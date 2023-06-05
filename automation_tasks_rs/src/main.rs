@@ -63,28 +63,29 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
 fn print_help() {
     println!(
         r#"
-    {YELLOW}Welcome to cargo-auto !
-    This program automates your custom tasks when developing a Rust project.{RESET}
+    {YELLOW}Welcome to cargo-auto !{RESET}
+    {YELLOW}This program automates your custom tasks when developing a Rust project.{RESET}
 
-    User defined tasks in automation_tasks_rs:
-cargo auto build - builds the crate in debug mode, fmt, increment version
-cargo auto release - builds the crate in release mode, fmt, increment version
-cargo auto doc - builds the docs, copy to docs directory
-cargo auto test - runs all the tests
-cargo auto commit_and_push "message" - commits with message and push with mandatory message
-    (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.)
-cargo auto publish_to_web - publish the release to web.crev.dev, git tag
+    {YELLOW}User defined tasks in automation_tasks_rs:{RESET}
+{GREEN}cargo auto build{RESET}{YELLOW} - builds the crate in debug mode, fmt, increment version{RESET}
+{GREEN}cargo auto release{RESET}{YELLOW} - builds the crate in release mode, fmt, increment version{RESET}
+{GREEN}cargo auto doc{RESET}{YELLOW} - builds the docs, copy to docs directory{RESET}
+{GREEN}cargo auto test{RESET}{YELLOW} - runs all the tests{RESET}
+{GREEN}cargo auto commit_and_push "message"{RESET}{YELLOW} - commits with message and push with mandatory message{RESET}
+    {YELLOW}(If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.){RESET}
+{GREEN}cargo auto publish_to_web{RESET}{YELLOW} - publish the release to web.crev.dev, git tag{RESET}
 
-    © bestia.dev 2022, MIT License, github.com/bestia-dev/cargo-auto
-"#);
+    {YELLOW}© 2023 bestia.dev  MIT License github.com/bestia-dev/cargo-auto{RESET}
+"#
+    );
     print_examples_cmd();
 }
 
 /// all example commands in one place
 fn print_examples_cmd(){
 /*
-    println!(r#"run examples:
-cargo run --example example1
+    println!(r#"{YELLOW}run examples:{RESET}
+{GREEN}cargo run --example example1{RESET}
 "#);
 */
 }
@@ -119,12 +120,12 @@ fn task_build() {
     run_shell_command("cargo fmt");
     run_shell_command("cargo build");
     println!(
-        r#"{YELLOW}
-    After `cargo auto build`, run the compiled binary, examples and/or tests
-./target/debug/{package_name} 
-    if ok, then,
-cargo auto release
-{RESET}"#,
+        r#"
+    {YELLOW}After `cargo auto build`, run the compiled binary, examples and/or tests{RESET}
+{GREEN}./target/debug/{package_name} argument{RESET}
+    {YELLOW}if ok, then,{RESET}
+{GREEN}cargo auto release{RESET}
+"#,
 package_name = cargo_toml.package_name(),
     );
     print_examples_cmd();
@@ -142,14 +143,14 @@ fn task_release() {
     run_shell_command(&format!(
         "strip target/release/{package_name}",
         package_name = cargo_toml.package_name()
-    ));    
+    ));
     println!(
-        r#"{YELLOW}
-    After `cargo auto release`, run the compiled binary, examples and/or tests
-./target/release/{package_name} 
-    if ok, then,
-cargo auto doc
-{RESET}"#,
+        r#"
+    {YELLOW}After `cargo auto release`, run the compiled binary, examples and/or tests{RESET}
+{GREEN}./target/release/{package_name} argument{RESET}
+    {YELLOW}if ok, then,{RESET}
+{GREEN}cargo auto doc{RESET}
+"#,
 package_name = cargo_toml.package_name(),
     );
     print_examples_cmd();
@@ -174,10 +175,10 @@ fn task_doc() {
     run_shell_command("cargo fmt");
     // message to help user with next move
     println!(
-        r#"{YELLOW}
-    After `cargo auto doc`, check `docs/index.html`. If ok, then test the documentation code examples
-cargo auto test
-{RESET}"#
+        r#"
+    {YELLOW}After `cargo auto doc`, check `docs/index.html`. If ok, then test the documentation code examples{RESET}
+{GREEN}cargo auto test{RESET}
+    {YELLOW}{RESET}"#
     );
 }
 
@@ -185,11 +186,11 @@ cargo auto test
 fn task_test() {
     run_shell_command("cargo test");
     println!(
-        r#"{YELLOW}
-    After `cargo auto test`. If ok, then 
-cargo auto commit_and_push "message"
-    with mandatory commit message
-{RESET}"#
+        r#"
+    {YELLOW}After `cargo auto test`. If ok, then {RESET}
+{GREEN}cargo auto commit_and_push "message"{RESET}
+    {YELLOW}with mandatory commit message{RESET}
+"#
     );
 }
 
@@ -201,10 +202,10 @@ fn task_commit_and_push(arg_2: Option<String>) {
             run_shell_command(&format!(r#"git add -A && git commit --allow-empty -m "{}""#, message));
             run_shell_command("git push");
             println!(
-                r#"{YELLOW}
-    After `cargo auto commit_and_push "message"`
-cargo auto publish_to_web
-{RESET}"#
+                r#"
+    {YELLOW}After `cargo auto commit_and_push "message"`{RESET}
+{GREEN}cargo auto publish_to_web{RESET}
+"#
             );
         }
     }
@@ -230,10 +231,10 @@ fn task_publish_to_web() {
     
     println!(
         r#"
-    After `cargo auto publish_to_web', ssh to server 
-ssh -i ~/.ssh/luciano_mac luciano_bestia@bestia.dev -
-    and run
-cargo_crev_web_admin
+    {YELLOW}After `cargo auto publish_to_web', ssh to server{RESET}
+{GREEN}ssh -i ~/.ssh/luciano_mac luciano_bestia@bestia.dev -{RESET}
+    {YELLOW}and run{RESET}
+{GREEN}cargo_crev_web_admin{RESET}
 "#
     );
 }
