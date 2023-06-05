@@ -1,6 +1,6 @@
 [package]
 name = "cargo_crev_web_admin"
-version = "2023.605.1106"
+version = "2023.605.1130"
 description = "Admin CLI for cargo_crev_web"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"

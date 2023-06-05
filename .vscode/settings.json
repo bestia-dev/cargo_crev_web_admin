@@ -45,6 +45,7 @@
         "substack",
         "termion",
         "webapps",
+        "webserverssh",
         "zdravje"
     ]
 }

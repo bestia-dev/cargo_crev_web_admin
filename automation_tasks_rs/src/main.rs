@@ -232,7 +232,7 @@ fn task_publish_to_web() {
     println!(
         r#"
     {YELLOW}After `cargo auto publish_to_web', ssh to server{RESET}
-{GREEN}ssh -i ~/.ssh/luciano_mac luciano_bestia@bestia.dev -{RESET}
+{GREEN}ssh -i ~/.ssh/webserverssh1 luciano_bestia@bestia.dev{RESET}
     {YELLOW}and run{RESET}
 {GREEN}cargo_crev_web_admin{RESET}
 "#

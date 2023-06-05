@@ -31,7 +31,7 @@ fn main() {
                 trusted_add(url);
                 ns_print_ms("trusted_add", ns_started);
             }
-            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+            _ => println!("{RED}Unrecognized arguments. Try cargo_crev_web_admin --help{RESET}"),
         },
         Some("trusted_delete") => match env::args().nth(2).as_deref() {
             Some(url) => {
@@ -39,7 +39,7 @@ fn main() {
                 trusted_delete(url);
                 ns_print_ms("trusted_delete", ns_started);
             }
-            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+            _ => println!("{RED}Unrecognized arguments. Try cargo_crev_web_admin --help{RESET}"),
         },
         Some("trusted_from_crev_command") => {
             let ns_started = ns_start("trusted_from_crev_command");
@@ -56,9 +56,13 @@ fn main() {
             match env::args().nth(2).as_deref() {
                 Some(repo_url) => match env::args().nth(3).as_deref() {
                     Some(note) => blocklisted_add(repo_url, note),
-                    _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+                    _ => println!(
+                        "{RED}Unrecognized arguments. Try cargo_crev_web_admin --help{RESET}"
+                    ),
                 },
-                _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+                _ => {
+                    println!("{RED}Unrecognized arguments. Try cargo_crev_web_admin --help{RESET}")
+                }
             }
             ns_print_ms("blocklisted_add", ns_started);
         }
@@ -66,7 +70,9 @@ fn main() {
             let ns_started = ns_start("blocklisted_delete");
             match env::args().nth(2).as_deref() {
                 Some(repo_url) => blocklisted_delete(repo_url),
-                _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+                _ => {
+                    println!("{RED}Unrecognized arguments. Try cargo_crev_web_admin --help{RESET}")
+                }
             }
             ns_print_ms("blocklisted_delete", ns_started);
         }
@@ -98,10 +104,10 @@ fn main() {
                 list_and_sync(path);
                 ns_print_ms("list_and_sync", ns_started);
             }
-            _ => println!("Unrecognized arguments. Try cargo_crev_web_admin --help"),
+            _ => println!("{RED}Unrecognized arguments. Try cargo_crev_web_admin --help{RESET}"),
         },
          */
-        _ => println!("Unrecognized arguments. Try `cargo_crev_web_admin --help`"),
+        _ => println!("{RED}Unrecognized arguments. Try `cargo_crev_web_admin --help`{RESET}"),
     }
 }
 
@@ -174,30 +180,30 @@ fn print_help() {
     println!(
         r#"
     {YELLOW}Welcome to cargo_crev_web_admin{RESET}
-    Admin tasks for the cargo_crev_web server.
+    {YELLOW}Admin tasks for the cargo_crev_web server.{RESET}
 
-    Command line arguments:
-trusted_list              - list the explicit trusted reviewers from the /trust/*.crev files
-trusted_add "url"         - add a trusted repo url (needs CREV_PASSPHRASE)
-trusted_delete "url"      - delete a trusted repo url
-trusted_from_crev_command - list the explicit trusted reviewers from cargo-crev command
+    {YELLOW}Command line arguments:{RESET}
+{GREEN}trusted_list              {RESET}{YELLOW}- list the explicit trusted reviewers from the /trust/*.crev files{RESET}
+{GREEN}trusted_add "url"         {RESET}{YELLOW}- add a trusted repo url (needs CREV_PASSPHRASE){RESET}
+{GREEN}trusted_delete "url"      {RESET}{YELLOW}- delete a trusted repo url{RESET}
+{GREEN}trusted_from_crev_command {RESET}{YELLOW}- list the explicit trusted reviewers from cargo-crev command{RESET}
 
-blocklisted_list          - list blocklisted
-blocklisted_add "url", "note" - add repo_url to blocklisted
-blocklisted_delete "url"  - delete repo_url from blocklisted
+{GREEN}blocklisted_list          {RESET}{YELLOW}- list blocklisted{RESET}
+{GREEN}blocklisted_add "url", "note" {RESET}{YELLOW}- add repo_url to blocklisted{RESET}
+{GREEN}blocklisted_delete "url"  {RESET}{YELLOW}- delete repo_url from blocklisted{RESET}
 
-remotes_delete            - delete fetched repos from /remote/ if they are not in trusted_list
-fetch                     - fetch the repos of explicit trusted reviewers 
-reindex                   - web app reads and reindex new or changed data 
-publish_to_github         - after changing trust files it is mandatory to publish this repo
+{GREEN}remotes_delete            {RESET}{YELLOW}- delete fetched repos from /remote/ if they are not in trusted_list{RESET}
+{GREEN}fetch                     {RESET}{YELLOW}- fetch the repos of explicit trusted reviewers {RESET}
+{GREEN}reindex                   {RESET}{YELLOW}- web app reads and reindex new or changed data {RESET}
+{GREEN}publish_to_github         {RESET}{YELLOW}- after changing trust files it is mandatory to publish this repo{RESET}
 
-    Type the crev passphrase into env variable (add one space before the command to avoid storing in bash history):
- export CREV_PASSPHRASE=xxx
+    {YELLOW}Type the crev passphrase into env variable (add one space before the command to avoid storing in bash history):{RESET}
+{GREEN}export CREV_PASSPHRASE=xxx{RESET}
 
-    Save the autocompletion command in ~/.bashrc:
-complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin
+    {YELLOW}Save the autocompletion command in ~/.bashrc:{RESET}
+{GREEN}complete -C "cargo_crev_web_admin completion" cargo_crev_web_admin{RESET}
 
-    © bestia.dev 2022, MIT License, github.com/bestia-dev/cargo_crev_web_admin
+    {YELLOW}© bestia.dev 2023, MIT License, github.com/bestia-dev/cargo_crev_web_admin{RESET}
 "#
     );
 }
