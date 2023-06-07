@@ -84,7 +84,7 @@ pub fn get_data_dir() -> std::path::PathBuf {
     let mut data_dir = data_dir.trim_end_matches("\n").to_string();
     data_dir.push_str("/proofs");
     // "~/.local/share/crev/proofs"
-    dbg!(&data_dir);
+    //dbg!(&data_dir);
 
     // get the current id
     let output = std::process::Command::new("cargo-crev")
@@ -97,7 +97,7 @@ pub fn get_data_dir() -> std::path::PathBuf {
     let mut iter = id_current.split_ascii_whitespace();
     let id_current = iter.next().unwrap();
     // "UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU"
-    dbg!(id_current);
+    // dbg!(id_current);
 
     // inside of that is a "crazy named" folder that contains the id folder. There can be more folders.
     // search all folders for a subfolder called id like "UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU"
@@ -106,14 +106,14 @@ pub fn get_data_dir() -> std::path::PathBuf {
         let entry_1 = path.unwrap();
         if entry_1.path().is_dir() {
             let dir_1_name = entry_1.file_name();
-            dbg!(&dir_1_name);
+            // dbg!(&dir_1_name);
             // if it contains a folder named as id
             let dir_2 = std::fs::read_dir(&entry_1.path()).unwrap();
             for path_2 in dir_2 {
                 let entry_2 = path_2.unwrap();
                 if entry_2.path().is_dir() {
                     let dir_2_name = entry_2.file_name();
-                    dbg!(&dir_2_name);
+                    // dbg!(&dir_2_name);
                     if dir_2_name.to_string_lossy() == id_current {
                         data_dir.push_str(&format!("/{}", dir_1_name.to_string_lossy()));
                         break 'outer;
@@ -122,9 +122,9 @@ pub fn get_data_dir() -> std::path::PathBuf {
             }
         }
     }
-    data_dir.push_str(&format!("/{}", id_current));
+    data_dir.push_str(&format!("/{id_current}"));
 
     // return
-    dbg!(&data_dir);
+    // dbg!(&data_dir);
     std::path::PathBuf::from(&data_dir)
 }

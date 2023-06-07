@@ -116,6 +116,7 @@ fn completion() {
 /// cargo build
 fn task_build() {
     let cargo_toml = CargoToml::read();
+    let package_name = cargo_toml.package_name();
     auto_version_increment_semver_or_date();
     run_shell_command("cargo fmt");
     run_shell_command("cargo build");
@@ -125,15 +126,14 @@ fn task_build() {
 {GREEN}./target/debug/{package_name} argument{RESET}
     {YELLOW}if ok, then,{RESET}
 {GREEN}cargo auto release{RESET}
-"#,
-package_name = cargo_toml.package_name(),
-    );
+"#);
     print_examples_cmd();
 }
 
 /// cargo build --release
 fn task_release() {
     let cargo_toml = CargoToml::read();
+    let package_name = cargo_toml.package_name();
     auto_version_increment_semver_or_date();
     auto_cargo_toml_to_md();
     auto_lines_of_code("");
@@ -150,9 +150,7 @@ fn task_release() {
 {GREEN}./target/release/{package_name} argument{RESET}
     {YELLOW}if ok, then,{RESET}
 {GREEN}cargo auto doc{RESET}
-"#,
-package_name = cargo_toml.package_name(),
-    );
+"#);
     print_examples_cmd();
 }
 
@@ -169,7 +167,7 @@ fn task_doc() {
     run_shell_command("rsync -a --info=progress2 --delete-after target/doc/ docs/");
     // Create simple index.html file in docs directory
     run_shell_command(&format!(
-        "echo \"<meta http-equiv=\\\"refresh\\\" content=\\\"0; url={}/index.html\\\" />\" > docs/index.html",
+        r#"echo "<meta http-equiv=\"refresh\" content=\"0; url={}/index.html\" />" > docs/index.html"#,
         cargo_toml.package_name().replace("-","_")
     ));
     run_shell_command("cargo fmt");
@@ -199,7 +197,7 @@ fn task_commit_and_push(arg_2: Option<String>) {
     match arg_2 {
         None => println!("{RED}Error: Message for commit is mandatory.{RESET}"),
         Some(message) => {
-            run_shell_command(&format!(r#"git add -A && git commit --allow-empty -m "{}""#, message));
+            run_shell_command(&format!(r#"git add -A && git commit --allow-empty -m "{message}""#));
             run_shell_command("git push");
             println!(
                 r#"
@@ -215,19 +213,19 @@ fn task_commit_and_push(arg_2: Option<String>) {
 fn task_publish_to_web() {
     println!(r#"{YELLOW}For SSH connection you need to run ssh-agent and then ssh-add you private key and passphrase.{RESET}"#);
     let cargo_toml = CargoToml::read();
+    let package_version = cargo_toml.package_version();
+    let package_name = cargo_toml.package_name();
+
     // git tag
-    let shell_command = format!(
-        "git tag -f -a v{version} -m version_{version}",
-        version = cargo_toml.package_version()
-    );
+    let shell_command = format!( "git tag -f -a v{package_version} -m version_{package_version}" );
     run_shell_command(&shell_command);
 
     // cargo publish
     // sync files from the local copy to remote server. 
-    let project_folder_to_publish = format!(r#"~/rustprojects/{package_name}/target/release/{package_name}"#, package_name = cargo_toml.package_name());
+    let project_folder_to_publish = format!(r#"~/rustprojects/{package_name}/target/release/{package_name}"#);
     let ssh_user_and_server = "luciano_bestia@bestia.dev";
-    let web_folder_over_ssh = format!(r#"{ssh_user_and_server}:/home/luciano_bestia/.cargo/bin/{package_name}"#,ssh_user_and_server =ssh_user_and_server, package_name = cargo_toml.package_name());
-    run_shell_command(&format!(r#"rsync -e ssh -a --info=progress2 --delete-after {} {}"#,project_folder_to_publish, web_folder_over_ssh));
+    let web_folder_over_ssh = format!(r#"{ssh_user_and_server}:/home/luciano_bestia/.cargo/bin/{package_name}"#);
+    run_shell_command(&format!(r#"rsync -e ssh -a --info=progress2 --delete-after {project_folder_to_publish} {web_folder_over_ssh}"#));
     
     println!(
         r#"

@@ -32,7 +32,7 @@ impl MyTrustedRepos {
         // if it already exists, delete the old one, because `cargo-crev crev trust` only adds new even for same repo_url
         self.trusted_delete(repo_url);
         let output = std::process::Command::new("cargo-crev")
-            .args(["crev", "trust", "--level", "low"])
+            .args(["crev", "trust", "--level", "high"])
             .arg(repo_url)
             .output()
             .unwrap();

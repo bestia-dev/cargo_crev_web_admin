@@ -151,9 +151,14 @@
 // endregion: auto_md_to_doc_comments include README.md A //!
 
 mod blocklisted_repos_mod;
+mod find_repos_with_reviews_mod;
+mod list_new_repos_mod;
 mod my_trusted_repos_mod;
 mod utils_mod;
 
+// re-export
+pub use find_repos_with_reviews_mod::find_repos_with_reviews_on_github;
+pub use list_new_repos_mod::list_new_repos;
 pub use utils_mod::*;
 
 // use unwrap::unwrap;
@@ -179,7 +184,7 @@ pub fn trusted_from_crev_command() {
     let output = my_trusted_repos.list_from_crev_command();
 
     let line_count = count_newlines(&output);
-    println!("{}\nLine count: {}", output, line_count);
+    println!("{output}\nLine count: {line_count}");
 }
 
 /// list the explicit trusted reviewers from the /trust/*.crev files
@@ -191,7 +196,7 @@ pub fn trusted_list() {
     let output = my_trusted_repos.list_from_files();
 
     let line_count = count_newlines(&output);
-    println!("{}\nLine count: {}", output, line_count);
+    println!("{output}\nLine count: {line_count}");
 }
 
 fn count_newlines(s: &str) -> usize {
@@ -199,7 +204,7 @@ fn count_newlines(s: &str) -> usize {
 }
 
 /// delete fetched repos from /remote/ if they are not in trusted_list
-pub fn remotes_delete() {
+pub fn delete_untrusted_repos() {
     println!("Delete fetched repos from /remote/ if they are not in trusted_list.");
     let mut output = String::new();
     let my_trusted_repos = MyTrustedRepos::new();
@@ -230,10 +235,10 @@ pub fn remotes_delete() {
         }
     }
     if !output.is_empty() {
-        println!("Run these commands manually in bash:\n{}", output);
+        println!("Run these commands manually in bash:\n{output}");
     }
 
-    println!("remotes_delete finished.");
+    println!("delete_untrusted_repos finished.");
 }
 
 /// fetch the explicit trusted reviewers from the /trust/*.crev files
@@ -270,7 +275,7 @@ pub fn fetch() {
         String::from_utf8(output.stderr).unwrap()
     );
     let line_count = count_newlines(&output);
-    println!("{}\nLine count: {}", output, line_count);
+    println!("{output}\nLine count: {line_count}");
 }
 
 /// add new trusted repo
@@ -279,7 +284,7 @@ pub fn trusted_add(repo_url: &str) {
     let my_trusted_repos = MyTrustedRepos::new();
     let output = my_trusted_repos.trusted_add(repo_url);
 
-    println!("{}", output);
+    println!("{output}");
 }
 
 /// delete from trusted repo
@@ -315,7 +320,7 @@ pub fn publish_to_github() {
         String::from_utf8(output.stdout).unwrap(),
         String::from_utf8(output.stderr).unwrap()
     );
-    println!("{}", &output);
+    println!("{output}");
     if output.contains("git@github.com: Permission denied (publickey).") {
         println!("If you don't have permission to write to github, then we need to run ssh-agent and ssh-add:");
         println!("$ eval `ssh-agent`; ssh-add ~/.ssh/bestia2_for_github");
@@ -329,7 +334,7 @@ pub fn blocklisted_list() {
     println!("List of blocklisted");
     println!("");
 
-    let bl = BlocklistedRepos::default();
+    let bl = BlocklistedRepos::read_from_default_file();
     let mut output = String::new();
     for x in bl.list().iter() {
         output.push_str(&x.0);
@@ -338,13 +343,13 @@ pub fn blocklisted_list() {
         output.push('\n');
     }
     let line_count = count_newlines(&output);
-    println!("{}\nLine count: {}", output, line_count);
+    println!("{output}\nLine count: {line_count}");
 }
 
 /// add new blocklist repo
 pub fn blocklisted_add(repo_url: &str, note: &str) {
     println!("Add blocklisted repo url.");
-    let mut bl = BlocklistedRepos::default();
+    let mut bl = BlocklistedRepos::read_from_default_file();
     bl.add(repo_url, note);
     bl.write();
     println!("Added to blocklist.");
@@ -353,7 +358,7 @@ pub fn blocklisted_add(repo_url: &str, note: &str) {
 /// delete from blocklist repo
 pub fn blocklisted_delete(repo_url: &str) {
     println!("Delete from blocklisted repo.");
-    let mut bl = BlocklistedRepos::default();
+    let mut bl = BlocklistedRepos::read_from_default_file();
     bl.delete(repo_url);
     bl.write();
     println!("Deleted from blocklist.");

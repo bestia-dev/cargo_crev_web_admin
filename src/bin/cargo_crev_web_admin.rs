@@ -76,10 +76,21 @@ fn main() {
             }
             ns_print_ms("blocklisted_delete", ns_started);
         }
-        Some("remotes_delete") => {
-            let ns_started = ns_start("remotes_delete");
-            remotes_delete();
-            ns_print_ms("remotes_delete", ns_started);
+        Some("find_repos_with_reviews_on_github") => {
+            let ns_started = ns_start("find_repos_with_reviews_on_github");
+            find_repos_with_reviews_on_github();
+            ns_print_ms("find_repos_with_reviews_on_github", ns_started);
+        }
+        Some("list_new_repos") => {
+            let ns_started = ns_start("list_new_repos");
+            list_new_repos();
+            ns_print_ms("list_new_repos", ns_started);
+        }
+
+        Some("delete_untrusted_repos") => {
+            let ns_started = ns_start("delete_untrusted_repos");
+            delete_untrusted_repos();
+            ns_print_ms("delete_untrusted_repos", ns_started);
         }
         Some("fetch") => {
             let ns_started = ns_start("fetch");
@@ -122,14 +133,14 @@ fn completion() {
         let mut sub_found = false;
         for sub_command in sub_commands.iter() {
             if sub_command.starts_with(word_being_completed) {
-                println!("{}", sub_command);
+                println!("{sub_command}");
                 sub_found = true;
             }
         }
         if sub_found == false {
             // print all sub-commands
             for sub_command in sub_commands.iter() {
-                println!("{}", sub_command);
+                println!("{sub_command}");
             }
         }
     }
@@ -156,7 +167,8 @@ fn completion() {
             "blocklisted_list",
             "blocklisted_add",
             "blocklisted_delete",
-            "remotes_delete",
+            "find_repos_with_reviews_on_github",
+            "delete_untrusted_repos",
             "fetch",
             "reindex",
             "publish_to_github",
@@ -192,7 +204,11 @@ fn print_help() {
 {GREEN}blocklisted_add "url", "note" {RESET}{YELLOW}- add repo_url to blocklisted{RESET}
 {GREEN}blocklisted_delete "url"  {RESET}{YELLOW}- delete repo_url from blocklisted{RESET}
 
-{GREEN}remotes_delete            {RESET}{YELLOW}- delete fetched repos from /remote/ if they are not in trusted_list{RESET}
+    {YELLOW}To access GitHub, export GITHUB_TOKEN to env var:{RESET}
+{GREEN}find_repos_with_reviews_on_github  {RESET}{YELLOW}- finds proof repos with reviews on github{RESET}
+{GREEN}list_new_repos  {RESET}{YELLOW}- list the new repos to add manually to web.crev.dev{RESET}
+
+{GREEN}delete_untrusted_repos            {RESET}{YELLOW}- delete fetched repos from /remote/ if they are not in trusted_list{RESET}
 {GREEN}fetch                     {RESET}{YELLOW}- fetch the repos of explicit trusted reviewers {RESET}
 {GREEN}reindex                   {RESET}{YELLOW}- web app reads and reindex new or changed data {RESET}
 {GREEN}publish_to_github         {RESET}{YELLOW}- after changing trust files it is mandatory to publish this repo{RESET}
@@ -206,4 +222,15 @@ fn print_help() {
     {YELLOW}© bestia.dev 2023, MIT License, github.com/bestia-dev/cargo_crev_web_admin{RESET}
 "#
     );
+}
+
+/// list the new repos to add to web.crev.dev
+pub fn list_new_repos() {
+    println!("List of new repos to add to web.crev.dev");
+    println!("");
+
+    let my_trusted_repos = cargo_crev_web_admin::list_new_repos();
+    for x in my_trusted_repos {
+        println!("{x}");
+    }
 }

@@ -2,17 +2,10 @@
 
 //! It is only one json file. Serialize and deserialize, read and write, add and delete
 
-// TODO: move this json into ~/.crev...
-// because /var/www is protected from normal user by permissions
-
-use lazy_static::lazy_static;
+/// store it in json file:
+/// ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/blocklisted_repos.json
 use serde_derive::{Deserialize, Serialize};
 use unwrap::unwrap;
-
-lazy_static! {
-    pub static ref BLOCKLISTED_REPOS_JSON: std::path::PathBuf =
-        crate::utils_mod::get_data_dir().join("blocklisted_repos.json");
-}
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct BlocklistedRepos {
@@ -21,14 +14,16 @@ pub struct BlocklistedRepos {
 }
 
 impl BlocklistedRepos {
-    /// read from default json file (different for debug and release)
-    pub fn default() -> BlocklistedRepos {
-        let file_path = (*BLOCKLISTED_REPOS_JSON).as_path();
-        Self::force_open_specific_json_file(file_path)
+    /// get default path
+    pub fn file_default_path() -> std::path::PathBuf {
+        crate::utils_mod::get_data_dir().join("blocklisted_repos.json")
+    }
+    /// read from default json file
+    pub fn read_from_default_file() -> BlocklistedRepos {
+        Self::read_from_specific_file(&BlocklistedRepos::file_default_path())
     }
     /// force to read from specific folder. Use this only for tests.
-    /// Use `default()` for normal code flow.
-    pub fn force_open_specific_json_file(file_path: &std::path::Path) -> BlocklistedRepos {
+    pub fn read_from_specific_file(file_path: &std::path::Path) -> BlocklistedRepos {
         let content = unwrap!(std::fs::read_to_string(file_path));
         let mut list: Vec<(String, String)> = unwrap!(serde_json::from_str(&content));
         list.sort_by(|a, b| a.0.to_lowercase().cmp(&b.0.to_lowercase()));
@@ -87,7 +82,7 @@ mod tests {
         let file_path = std::path::Path::new("sample_data/blocklisted_repos.json");
         // copy the original file with the date/time
         let suffix = crate::datetime_now_for_file_names();
-        let file_path_copy = format!("sample_data/blocklisted_repos_{}.json_copy", suffix);
+        let file_path_copy = format!("sample_data/blocklisted_repos_{suffix}.json_copy");
         let file_path_copy = std::path::Path::new(&file_path_copy);
         std::fs::copy(file_path, file_path_copy).unwrap();
 
@@ -104,7 +99,7 @@ mod tests {
         unwrap!(std::fs::write(file_path, json));
         // endregion: set initial content
         // force open a specific json file
-        let mut blocklisted = BlocklistedRepos::force_open_specific_json_file(file_path);
+        let mut blocklisted = BlocklistedRepos::read_from_specific_file(file_path);
 
         assert_eq!(blocklisted.count(), 2);
         blocklisted.add("xxx", "xxx");
