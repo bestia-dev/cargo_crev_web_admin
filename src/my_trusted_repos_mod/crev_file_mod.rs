@@ -4,7 +4,7 @@ use dev_bestia_string_utils::*;
 use unwrap::unwrap;
 
 // there are 2 types of "my" crev files in folders:
-// 1. containing `my trust yaml` are in the one folder ~/.config/crev/proofs/github_com_.../.../trust/*.crev
+// 1. containing `my trust yaml` are in the one folder ~/.local/share/crev/proofs/github_com_.../.../trust/*.crev
 // 2. containing `my review yaml` are in the one folder ~/.config/crev/proofs/github_com_.../.../reviews/*.crev
 
 // there are 2 types of "others" crev files in folders:

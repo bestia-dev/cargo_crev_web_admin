@@ -86,7 +86,11 @@ fn main() {
             list_new_repos();
             ns_print_ms("list_new_repos", ns_started);
         }
-
+        Some("list_repos_to_unblock") => {
+            let ns_started = ns_start("list_repos_to_unblock");
+            list_repos_to_unblock();
+            ns_print_ms("list_repos_to_unblock", ns_started);
+        }
         Some("delete_untrusted_repos") => {
             let ns_started = ns_start("delete_untrusted_repos");
             delete_untrusted_repos();
@@ -168,6 +172,8 @@ fn completion() {
             "blocklisted_add",
             "blocklisted_delete",
             "find_repos_with_reviews_on_github",
+            "list_new_repos",
+            "list_repos_to_unblock",
             "delete_untrusted_repos",
             "fetch",
             "reindex",
@@ -207,6 +213,7 @@ fn print_help() {
     {YELLOW}To access GitHub, export GITHUB_TOKEN to env var:{RESET}
 {GREEN}find_repos_with_reviews_on_github  {RESET}{YELLOW}- finds proof repos with reviews on github{RESET}
 {GREEN}list_new_repos  {RESET}{YELLOW}- list the new repos to add manually to web.crev.dev{RESET}
+{GREEN}list_repos_to_unblock  {RESET}{YELLOW}- list the blocked repos that are maybe ok to unblock{RESET}
 
 {GREEN}delete_untrusted_repos            {RESET}{YELLOW}- delete fetched repos from /remote/ if they are not in trusted_list{RESET}
 {GREEN}fetch                     {RESET}{YELLOW}- fetch the repos of explicit trusted reviewers {RESET}
@@ -226,11 +233,22 @@ fn print_help() {
 
 /// list the new repos to add to web.crev.dev
 pub fn list_new_repos() {
-    println!("List of new repos to add to web.crev.dev");
+    println!("{YELLOW}List of new repos to add to web.crev.dev{RESET}");
     println!("");
 
     let my_trusted_repos = cargo_crev_web_admin::list_new_repos();
     for x in my_trusted_repos {
         println!("{x}");
+    }
+}
+
+/// list the blocked repos that are maybe ok to unblock
+pub fn list_repos_to_unblock() {
+    println!("{YELLOW}List of blocked repos that are maybe ok now and can be unblocked{RESET}");
+    println!("");
+
+    let list_to_try_unblock = cargo_crev_web_admin::list_repos_to_unblock();
+    for x in list_to_try_unblock {
+        println!("{} {}", x.0, x.1);
     }
 }

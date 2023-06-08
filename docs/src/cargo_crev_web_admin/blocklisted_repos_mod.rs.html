@@ -114,26 +114,14 @@
 <a href="#114" id="114">114</a>
 <a href="#115" id="115">115</a>
 <a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
 </pre><pre class="rust"><code><span class="comment">// blocklisted_repos_mod.rs
 
 </span><span class="doccomment">//! It is only one json file. Serialize and deserialize, read and write, add and delete
 
-</span><span class="comment">// TODO: move this json into ~/.crev...
-// because /var/www is protected from normal user by permissions
-
-</span><span class="kw">use </span>lazy_static::lazy_static;
-<span class="kw">use </span>serde_derive::{Deserialize, Serialize};
+/// store it in json file:
+/// ~/.local/share/crev/proofs/github_com_web-crev-dev_crev-proofs-POHSrDcUUmA6qBxSX6zy1w/UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU/blocklisted_repos.json
+</span><span class="kw">use </span>serde_derive::{Deserialize, Serialize};
 <span class="kw">use </span>unwrap::unwrap;
-
-<span class="macro">lazy_static! </span>{
-    <span class="kw">pub static </span><span class="kw-2">ref </span>BLOCKLISTED_REPOS_JSON: std::path::PathBuf =
-        <span class="kw">crate</span>::utils_mod::get_data_dir().join(<span class="string">&quot;blocklisted_repos.json&quot;</span>);
-}
 
 <span class="attr">#[derive(Debug, Default, Serialize, Deserialize)]
 </span><span class="kw">pub struct </span>BlocklistedRepos {
@@ -142,14 +130,16 @@
 }
 
 <span class="kw">impl </span>BlocklistedRepos {
-    <span class="doccomment">/// read from default json file (different for debug and release)
-    </span><span class="kw">pub fn </span>default() -&gt; BlocklistedRepos {
-        <span class="kw">let </span>file_path = (<span class="kw-2">*</span>BLOCKLISTED_REPOS_JSON).as_path();
-        <span class="self">Self</span>::force_open_specific_json_file(file_path)
+    <span class="doccomment">/// get default path
+    </span><span class="kw">pub fn </span>file_default_path() -&gt; std::path::PathBuf {
+        <span class="kw">crate</span>::utils_mod::get_data_dir().join(<span class="string">&quot;blocklisted_repos.json&quot;</span>)
+    }
+    <span class="doccomment">/// read from default json file
+    </span><span class="kw">pub fn </span>read_from_default_file() -&gt; BlocklistedRepos {
+        <span class="self">Self</span>::read_from_specific_file(<span class="kw-2">&amp;</span>BlocklistedRepos::file_default_path())
     }
     <span class="doccomment">/// force to read from specific folder. Use this only for tests.
-    /// Use `default()` for normal code flow.
-    </span><span class="kw">pub fn </span>force_open_specific_json_file(file_path: <span class="kw-2">&amp;</span>std::path::Path) -&gt; BlocklistedRepos {
+    </span><span class="kw">pub fn </span>read_from_specific_file(file_path: <span class="kw-2">&amp;</span>std::path::Path) -&gt; BlocklistedRepos {
         <span class="kw">let </span>content = <span class="macro">unwrap!</span>(std::fs::read_to_string(file_path));
         <span class="kw">let </span><span class="kw-2">mut </span>list: Vec&lt;(String, String)&gt; = <span class="macro">unwrap!</span>(serde_json::from_str(<span class="kw-2">&amp;</span>content));
         list.sort_by(|a, b| a.<span class="number">0</span>.to_lowercase().cmp(<span class="kw-2">&amp;</span>b.<span class="number">0</span>.to_lowercase()));
@@ -207,8 +197,8 @@
         <span class="comment">// region: set initial content
         </span><span class="kw">let </span>file_path = std::path::Path::new(<span class="string">&quot;sample_data/blocklisted_repos.json&quot;</span>);
         <span class="comment">// copy the original file with the date/time
-        </span><span class="kw">let </span>suffix = <span class="kw">crate</span>::datetime_now_for_dir_2_names();
-        <span class="kw">let </span>file_path_copy = <span class="macro">format!</span>(<span class="string">&quot;sample_data/blocklisted_repos_{}.json_copy&quot;</span>, suffix);
+        </span><span class="kw">let </span>suffix = <span class="kw">crate</span>::datetime_now_for_file_names();
+        <span class="kw">let </span>file_path_copy = <span class="macro">format!</span>(<span class="string">&quot;sample_data/blocklisted_repos_{suffix}.json_copy&quot;</span>);
         <span class="kw">let </span>file_path_copy = std::path::Path::new(<span class="kw-2">&amp;</span>file_path_copy);
         std::fs::copy(file_path, file_path_copy).unwrap();
 
@@ -225,7 +215,7 @@
         <span class="macro">unwrap!</span>(std::fs::write(file_path, json));
         <span class="comment">// endregion: set initial content
         // force open a specific json file
-        </span><span class="kw">let </span><span class="kw-2">mut </span>blocklisted = BlocklistedRepos::force_open_specific_json_file(file_path);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>blocklisted = BlocklistedRepos::read_from_specific_file(file_path);
 
         <span class="macro">assert_eq!</span>(blocklisted.count(), <span class="number">2</span>);
         blocklisted.add(<span class="string">&quot;xxx&quot;</span>, <span class="string">&quot;xxx&quot;</span>);

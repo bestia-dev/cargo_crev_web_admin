@@ -115,7 +115,7 @@
         <span class="comment">// if it already exists, delete the old one, because `cargo-crev crev trust` only adds new even for same repo_url
         </span><span class="self">self</span>.trusted_delete(repo_url);
         <span class="kw">let </span>output = std::process::Command::new(<span class="string">&quot;cargo-crev&quot;</span>)
-            .args([<span class="string">&quot;crev&quot;</span>, <span class="string">&quot;trust&quot;</span>, <span class="string">&quot;--level&quot;</span>, <span class="string">&quot;low&quot;</span>])
+            .args([<span class="string">&quot;crev&quot;</span>, <span class="string">&quot;trust&quot;</span>, <span class="string">&quot;--level&quot;</span>, <span class="string">&quot;high&quot;</span>])
             .arg(repo_url)
             .output()
             .unwrap();

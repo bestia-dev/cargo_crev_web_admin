@@ -4,11 +4,11 @@
 //! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***version: 2023.605.1106 date: 2023-06-05 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
+//! ***version: 2023.608.746 date: 2023-06-08 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-850-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-103-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-1113-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-207-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-126-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //!
@@ -151,14 +151,15 @@
 // endregion: auto_md_to_doc_comments include README.md A //!
 
 mod blocklisted_repos_mod;
-mod find_repos_with_reviews_mod;
 mod list_new_repos_mod;
 mod my_trusted_repos_mod;
+mod repos_with_reviews_mod;
 mod utils_mod;
 
 // re-export
-pub use find_repos_with_reviews_mod::find_repos_with_reviews_on_github;
 pub use list_new_repos_mod::list_new_repos;
+pub use list_new_repos_mod::list_repos_to_unblock;
+pub use repos_with_reviews_mod::find_repos_with_reviews_on_github;
 pub use utils_mod::*;
 
 // use unwrap::unwrap;

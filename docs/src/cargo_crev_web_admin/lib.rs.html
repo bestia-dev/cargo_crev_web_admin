@@ -358,17 +358,23 @@
 <a href="#358" id="358">358</a>
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
 </pre><pre class="rust"><code><span class="comment">// cargo_crev_web_admin lib.rs
 
 // region: auto_md_to_doc_comments include README.md A //!
 </span><span class="doccomment">//! # cargo_crev_web_admin
 //!
 //! **Admin CLI for cargo_crev_web**  
-//! ***version: 2023.605.1106 date: 2023-06-05 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
+//! ***version: 2023.608.746 date: 2023-06-08 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-850-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-119-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-103-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-1113-green.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-207-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-126-purple.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-36-orange.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
 //!
@@ -511,9 +517,15 @@
 </span><span class="comment">// endregion: auto_md_to_doc_comments include README.md A //!
 
 </span><span class="kw">mod </span>blocklisted_repos_mod;
+<span class="kw">mod </span>list_new_repos_mod;
 <span class="kw">mod </span>my_trusted_repos_mod;
+<span class="kw">mod </span>repos_with_reviews_mod;
 <span class="kw">mod </span>utils_mod;
 
+<span class="comment">// re-export
+</span><span class="kw">pub use </span>list_new_repos_mod::list_new_repos;
+<span class="kw">pub use </span>list_new_repos_mod::list_repos_to_unblock;
+<span class="kw">pub use </span>repos_with_reviews_mod::find_repos_with_reviews_on_github;
 <span class="kw">pub use </span>utils_mod::<span class="kw-2">*</span>;
 
 <span class="comment">// use unwrap::unwrap;
@@ -539,7 +551,7 @@
     <span class="kw">let </span>output = my_trusted_repos.list_from_crev_command();
 
     <span class="kw">let </span>line_count = count_newlines(<span class="kw-2">&amp;</span>output);
-    <span class="macro">println!</span>(<span class="string">&quot;{}\nLine count: {}&quot;</span>, output, line_count);
+    <span class="macro">println!</span>(<span class="string">&quot;{output}\nLine count: {line_count}&quot;</span>);
 }
 
 <span class="doccomment">/// list the explicit trusted reviewers from the /trust/*.crev files
@@ -551,7 +563,7 @@
     <span class="kw">let </span>output = my_trusted_repos.list_from_files();
 
     <span class="kw">let </span>line_count = count_newlines(<span class="kw-2">&amp;</span>output);
-    <span class="macro">println!</span>(<span class="string">&quot;{}\nLine count: {}&quot;</span>, output, line_count);
+    <span class="macro">println!</span>(<span class="string">&quot;{output}\nLine count: {line_count}&quot;</span>);
 }
 
 <span class="kw">fn </span>count_newlines(s: <span class="kw-2">&amp;</span>str) -&gt; usize {
@@ -559,7 +571,7 @@
 }
 
 <span class="doccomment">/// delete fetched repos from /remote/ if they are not in trusted_list
-</span><span class="kw">pub fn </span>remotes_delete() {
+</span><span class="kw">pub fn </span>delete_untrusted_repos() {
     <span class="macro">println!</span>(<span class="string">&quot;Delete fetched repos from /remote/ if they are not in trusted_list.&quot;</span>);
     <span class="kw">let </span><span class="kw-2">mut </span>output = String::new();
     <span class="kw">let </span>my_trusted_repos = MyTrustedRepos::new();
@@ -590,10 +602,10 @@
         }
     }
     <span class="kw">if </span>!output.is_empty() {
-        <span class="macro">println!</span>(<span class="string">&quot;Run these commands manually in bash:\n{}&quot;</span>, output);
+        <span class="macro">println!</span>(<span class="string">&quot;Run these commands manually in bash:\n{output}&quot;</span>);
     }
 
-    <span class="macro">println!</span>(<span class="string">&quot;remotes_delete finished.&quot;</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;delete_untrusted_repos finished.&quot;</span>);
 }
 
 <span class="doccomment">/// fetch the explicit trusted reviewers from the /trust/*.crev files
@@ -630,7 +642,7 @@
         String::from_utf8(output.stderr).unwrap()
     );
     <span class="kw">let </span>line_count = count_newlines(<span class="kw-2">&amp;</span>output);
-    <span class="macro">println!</span>(<span class="string">&quot;{}\nLine count: {}&quot;</span>, output, line_count);
+    <span class="macro">println!</span>(<span class="string">&quot;{output}\nLine count: {line_count}&quot;</span>);
 }
 
 <span class="doccomment">/// add new trusted repo
@@ -639,7 +651,7 @@
     <span class="kw">let </span>my_trusted_repos = MyTrustedRepos::new();
     <span class="kw">let </span>output = my_trusted_repos.trusted_add(repo_url);
 
-    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, output);
+    <span class="macro">println!</span>(<span class="string">&quot;{output}&quot;</span>);
 }
 
 <span class="doccomment">/// delete from trusted repo
@@ -675,7 +687,7 @@
         String::from_utf8(output.stdout).unwrap(),
         String::from_utf8(output.stderr).unwrap()
     );
-    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="kw-2">&amp;</span>output);
+    <span class="macro">println!</span>(<span class="string">&quot;{output}&quot;</span>);
     <span class="kw">if </span>output.contains(<span class="string">&quot;git@github.com: Permission denied (publickey).&quot;</span>) {
         <span class="macro">println!</span>(<span class="string">&quot;If you don&#39;t have permission to write to github, then we need to run ssh-agent and ssh-add:&quot;</span>);
         <span class="macro">println!</span>(<span class="string">&quot;$ eval `ssh-agent`; ssh-add ~/.ssh/bestia2_for_github&quot;</span>);
@@ -689,7 +701,7 @@
     <span class="macro">println!</span>(<span class="string">&quot;List of blocklisted&quot;</span>);
     <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
 
-    <span class="kw">let </span>bl = BlocklistedRepos::default();
+    <span class="kw">let </span>bl = BlocklistedRepos::read_from_default_file();
     <span class="kw">let </span><span class="kw-2">mut </span>output = String::new();
     <span class="kw">for </span>x <span class="kw">in </span>bl.list().iter() {
         output.push_str(<span class="kw-2">&amp;</span>x.<span class="number">0</span>);
@@ -698,13 +710,13 @@
         output.push(<span class="string">&#39;\n&#39;</span>);
     }
     <span class="kw">let </span>line_count = count_newlines(<span class="kw-2">&amp;</span>output);
-    <span class="macro">println!</span>(<span class="string">&quot;{}\nLine count: {}&quot;</span>, output, line_count);
+    <span class="macro">println!</span>(<span class="string">&quot;{output}\nLine count: {line_count}&quot;</span>);
 }
 
 <span class="doccomment">/// add new blocklist repo
 </span><span class="kw">pub fn </span>blocklisted_add(repo_url: <span class="kw-2">&amp;</span>str, note: <span class="kw-2">&amp;</span>str) {
     <span class="macro">println!</span>(<span class="string">&quot;Add blocklisted repo url.&quot;</span>);
-    <span class="kw">let </span><span class="kw-2">mut </span>bl = BlocklistedRepos::default();
+    <span class="kw">let </span><span class="kw-2">mut </span>bl = BlocklistedRepos::read_from_default_file();
     bl.add(repo_url, note);
     bl.write();
     <span class="macro">println!</span>(<span class="string">&quot;Added to blocklist.&quot;</span>);
@@ -713,7 +725,7 @@
 <span class="doccomment">/// delete from blocklist repo
 </span><span class="kw">pub fn </span>blocklisted_delete(repo_url: <span class="kw-2">&amp;</span>str) {
     <span class="macro">println!</span>(<span class="string">&quot;Delete from blocklisted repo.&quot;</span>);
-    <span class="kw">let </span><span class="kw-2">mut </span>bl = BlocklistedRepos::default();
+    <span class="kw">let </span><span class="kw-2">mut </span>bl = BlocklistedRepos::read_from_default_file();
     bl.delete(repo_url);
     bl.write();
     <span class="macro">println!</span>(<span class="string">&quot;Deleted from blocklist.&quot;</span>);

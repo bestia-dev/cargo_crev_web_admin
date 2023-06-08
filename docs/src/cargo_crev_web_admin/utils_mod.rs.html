@@ -214,9 +214,9 @@
     </span><span class="kw">let </span><span class="kw-2">mut </span>data_dir = data_dir.trim_end_matches(<span class="string">&quot;\n&quot;</span>).to_string();
     data_dir.push_str(<span class="string">&quot;/proofs&quot;</span>);
     <span class="comment">// &quot;~/.local/share/crev/proofs&quot;
-    </span><span class="macro">dbg!</span>(<span class="kw-2">&amp;</span>data_dir);
+    //dbg!(&amp;data_dir);
 
-    <span class="comment">// get the current id
+    // get the current id
     </span><span class="kw">let </span>output = std::process::Command::new(<span class="string">&quot;cargo-crev&quot;</span>)
         .args([<span class="string">&quot;crev&quot;</span>, <span class="string">&quot;id&quot;</span>, <span class="string">&quot;current&quot;</span>])
         .output()
@@ -227,24 +227,24 @@
     </span><span class="kw">let </span><span class="kw-2">mut </span>iter = id_current.split_ascii_whitespace();
     <span class="kw">let </span>id_current = iter.next().unwrap();
     <span class="comment">// &quot;UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU&quot;
-    </span><span class="macro">dbg!</span>(id_current);
+    // dbg!(id_current);
 
-    <span class="comment">// inside of that is a &quot;crazy named&quot; folder that contains the id folder. There can be more folders.
+    // inside of that is a &quot;crazy named&quot; folder that contains the id folder. There can be more folders.
     // search all folders for a subfolder called id like &quot;UpOPNplVEwBS2RhF7SS9gSP3bPJlfg-ZEoZ89gEMDwU&quot;
     </span><span class="kw">let </span>dir_1 = std::fs::read_dir(<span class="kw-2">&amp;</span>data_dir).unwrap();
     <span class="lifetime">&#39;outer</span>: <span class="kw">for </span>path <span class="kw">in </span>dir_1 {
         <span class="kw">let </span>entry_1 = path.unwrap();
         <span class="kw">if </span>entry_1.path().is_dir() {
             <span class="kw">let </span>dir_1_name = entry_1.file_name();
-            <span class="macro">dbg!</span>(<span class="kw-2">&amp;</span>dir_1_name);
-            <span class="comment">// if it contains a folder named as id
+            <span class="comment">// dbg!(&amp;dir_1_name);
+            // if it contains a folder named as id
             </span><span class="kw">let </span>dir_2 = std::fs::read_dir(<span class="kw-2">&amp;</span>entry_1.path()).unwrap();
             <span class="kw">for </span>path_2 <span class="kw">in </span>dir_2 {
                 <span class="kw">let </span>entry_2 = path_2.unwrap();
                 <span class="kw">if </span>entry_2.path().is_dir() {
                     <span class="kw">let </span>dir_2_name = entry_2.file_name();
-                    <span class="macro">dbg!</span>(<span class="kw-2">&amp;</span>dir_2_name);
-                    <span class="kw">if </span>dir_2_name.to_string_lossy() == id_current {
+                    <span class="comment">// dbg!(&amp;dir_2_name);
+                    </span><span class="kw">if </span>dir_2_name.to_string_lossy() == id_current {
                         data_dir.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;/{}&quot;</span>, dir_1_name.to_string_lossy()));
                         <span class="kw">break </span><span class="lifetime">&#39;outer</span>;
                     }
@@ -252,11 +252,11 @@
             }
         }
     }
-    data_dir.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;/{}&quot;</span>, id_current));
+    data_dir.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;/{id_current}&quot;</span>));
 
     <span class="comment">// return
-    </span><span class="macro">dbg!</span>(<span class="kw-2">&amp;</span>data_dir);
-    std::path::PathBuf::from(<span class="kw-2">&amp;</span>data_dir)
+    // dbg!(&amp;data_dir);
+    </span>std::path::PathBuf::from(<span class="kw-2">&amp;</span>data_dir)
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cargo_crev_web_admin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0 (84c898d65 2023-04-16)" data-search-js="search-8a59a8356673ec1f.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

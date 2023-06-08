@@ -70,7 +70,7 @@ checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
 
 [[package]]
 name = "cargo_crev_web_admin"
-version = "2023.607.1237"
+version = "2023.608.746"
 dependencies = [
  "anyhow",
  "chrono",
