@@ -7,6 +7,9 @@
 **Admin CLI for cargo_crev_web**  
 ***version: 2023.608.746 date: 2023-06-08 author: [bestia.dev](https://bestia.dev) repository: [Github](https://github.com/bestia-dev/cargo_crev_web_admin/)***  
 
+![status](https://img.shields.io/badge/active_dev-green) 
+![status](https://img.shields.io/badge/in_use-green) 
+
 [//]: # (auto_cargo_toml_to_md end)
 
 [//]: # (auto_lines_of_code start)
