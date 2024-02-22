@@ -67,13 +67,13 @@ fn print_help() {
     {YELLOW}This program automates your custom tasks when developing a Rust project.{RESET}
 
     {YELLOW}User defined tasks in automation_tasks_rs:{RESET}
-{GREEN}cargo auto build{RESET}{YELLOW} - builds the crate in debug mode, fmt, increment version{RESET}
-{GREEN}cargo auto release{RESET}{YELLOW} - builds the crate in release mode, fmt, increment version{RESET}
-{GREEN}cargo auto doc{RESET}{YELLOW} - builds the docs, copy to docs directory{RESET}
-{GREEN}cargo auto test{RESET}{YELLOW} - runs all the tests{RESET}
-{GREEN}cargo auto commit_and_push "message"{RESET}{YELLOW} - commits with message and push with mandatory message{RESET}
+{GREEN}cargo auto build{RESET} - {YELLOW}builds the crate in debug mode, fmt, increment version{RESET}
+{GREEN}cargo auto release{RESET} - {YELLOW}builds the crate in release mode, fmt, increment version{RESET}
+{GREEN}cargo auto doc{RESET} - {YELLOW}builds the docs, copy to docs directory{RESET}
+{GREEN}cargo auto test{RESET} - {YELLOW}runs all the tests{RESET}
+{GREEN}cargo auto commit_and_push "message"{RESET} - {YELLOW}commits with message and push with mandatory message{RESET}
     {YELLOW}(If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.){RESET}
-{GREEN}cargo auto publish_to_web{RESET}{YELLOW} - publish the release to web.crev.dev, git tag{RESET}
+{GREEN}cargo auto publish_to_web{RESET} - {YELLOW}publish the release to web.crev.dev, git tag{RESET}
 
     {YELLOW}© 2023 bestia.dev  MIT License github.com/bestia-dev/cargo-auto{RESET}
 "#
@@ -124,7 +124,7 @@ fn task_build() {
         r#"
     {YELLOW}After `cargo auto build`, run the compiled binary, examples and/or tests{RESET}
 {GREEN}./target/debug/{package_name} argument{RESET}
-    {YELLOW}if ok, then,{RESET}
+    {YELLOW}if ok then{RESET}
 {GREEN}cargo auto release{RESET}
 "#);
     print_examples_cmd();
@@ -148,7 +148,7 @@ fn task_release() {
         r#"
     {YELLOW}After `cargo auto release`, run the compiled binary, examples and/or tests{RESET}
 {GREEN}./target/release/{package_name} argument{RESET}
-    {YELLOW}if ok, then,{RESET}
+    {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}
 "#);
     print_examples_cmd();
@@ -174,9 +174,9 @@ fn task_doc() {
     // message to help user with next move
     println!(
         r#"
-    {YELLOW}After `cargo auto doc`, check `docs/index.html`. If ok, then test the documentation code examples{RESET}
+    {YELLOW}After `cargo auto doc`, check `docs/index.html`. If ok then test the documentation code examples{RESET}
 {GREEN}cargo auto test{RESET}
-    {YELLOW}{RESET}"#
+    "#
     );
 }
 
@@ -185,7 +185,7 @@ fn task_test() {
     run_shell_command("cargo test");
     println!(
         r#"
-    {YELLOW}After `cargo auto test`. If ok, then {RESET}
+    {YELLOW}After `cargo auto test`. If ok then {RESET}
 {GREEN}cargo auto commit_and_push "message"{RESET}
     {YELLOW}with mandatory commit message{RESET}
 "#
