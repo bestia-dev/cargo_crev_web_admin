@@ -132,15 +132,6 @@ This should list around 80 directly trusted proof-repos that are used on the ser
 
 Integrity - warnings if a review have incorrect url or ID
 
-## cargo-crev reviews and advisory
-
-Please, spread this info !\
-Open source code needs a community effort to express trustworthiness.\
-Start with reading the reviews of the crates on [web.crev.dev](https://web.crev.dev/rust-reviews/crates). \
-Then install the GUI [cargo_crev_reviews](https://crates.io/crates/cargo_crev_reviews) or the CLI [cargo-crev](https://github.com/crev-dev/cargo-crev)\.  
-Your personal reviews are most important. If you have a boss, he will sooner or later ask you to show him your reviews for all the dependencies you use. With [cargo_crev_reviews](https://crates.io/crates/cargo_crev_reviews) you have a basic tool to do that. \
-Write your reviews! Describe the crates you trust and why. Or warn about the crate versions you think are dangerous. Publish and share your opinion with other developers.\
-
 ## Open-source and free as a beer
 
 My open-source projects are free as a beer (MIT license).  
