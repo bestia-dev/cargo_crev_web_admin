@@ -113,7 +113,7 @@ fn completion() {
 
 /// cargo build
 fn task_build() {
-    let cargo_toml = CargoToml::read();
+    let cargo_toml = cl::CargoToml::read();
     let package_name = cargo_toml.package_name();
     cl::auto_version_increment_semver_or_date();
     cl::run_shell_command("cargo fmt");
@@ -130,7 +130,7 @@ fn task_build() {
 
 /// cargo build --release
 fn task_release() {
-    let cargo_toml = CargoToml::read();
+    let cargo_toml = cl::CargoToml::read();
     let package_name = cargo_toml.package_name();
     cl::auto_version_increment_semver_or_date();
     cl::auto_cargo_toml_to_md();
@@ -222,7 +222,7 @@ r#"
 /// publish to web (the release build) and git tag
 fn task_publish_to_web() {
     println!(r#"{YELLOW}For SSH connection you need to run ssh-agent and then ssh-add you private key and passphrase.{RESET}"#);
-    let cargo_toml = CargoToml::read();
+    let cargo_toml = cl::CargoToml::read();
     let package_version = cargo_toml.package_version();
     let package_name = cargo_toml.package_name();
 
