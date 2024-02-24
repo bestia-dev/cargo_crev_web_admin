@@ -15,16 +15,10 @@
     ],
     "rust-analyzer.showUnlinkedFileNotification": false,
     "cSpell.words": [
-        "commitish",
-        "crev",
-        "deps",
+        "bestia",
+        "chrono",
         "endregion",
-        "googlecloud",
-        "mkdir",
-        "octocrab",
-        "repos",
-        "reqwest",
-        "rustfmt",
-        "rustprojects"
+        "plantuml",
+        "zcvf"
     ]
 }
