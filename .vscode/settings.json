@@ -5,6 +5,15 @@
         "titleBar.activeBackground": "#8d3f3f",
         "titleBar.inactiveBackground": "#8d3f3fCC"
       },
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false,
     "cSpell.words": [
         "Alla",
         "bestia",
