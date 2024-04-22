@@ -22,7 +22,7 @@
 [//]: # (auto_lines_of_code end)
 
  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/blob/main/LICENSE)
- [![Rust](https://github.com/bestia-dev/cargo_crev_web_admin/workflows/RustAction/badge.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
+ [![Rust](https://github.com/bestia-dev/cargo_crev_web_admin/workflows/rust_fmt_auto_build_test/badge.svg)](https://github.com/bestia-dev/cargo_crev_web_admin/)
  ![cargo_crev_web_admin](https://bestia.dev/webpage_hit_counter/get_svg_image/911031110.svg)
 
 Hashtags: #rustlang #buildtool #developmenttool #web #admin #cli  
